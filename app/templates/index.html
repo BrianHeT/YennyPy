@@ -1,19 +1,250 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yenny - Libreria</title>
+    <title>Yenny - Librería</title>
+
 </head>
-<body>
+<body class="body-index">
+    <!-- Include Header -->
     {% include 'components/nav.html' %}
 
-    <main>
-    <h1>Bienvenido a Yenny - Libreria</h1>
-    <p>Tu tienda de libros en línea.</p>    
-    </main>    
+    <!-- Hero Section -->
+<div class="hero-section">
+    <img src="https://yennypy-images.s3.us-east-2.amazonaws.com/biblioteca.jpg" alt="Biblioteca" class="hero-image">
+</div>
 
-    
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Content -->
+        <div class="content-left">
+            <!-- Más Vendidos Section -->
+            <div class="books-section">
+                <h2 class="section-title">Más vendidos:</h2>
+                <div class="books-grid">
+                    <!-- Book 1 -->
+                    <div class="book-card">
+                        <div class="book-image">
+                            <!-- TODO: Agregar imagen del libro -->
+                            <img src="URL_LIBRO_1" alt="Libro 1">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-name">Nombre</div>
+                            <div class="book-price">Precio</div>
+                            <div class="book-actions">
+                                <button class="buy-button">Comprar</button>
+                                <span class="star-icon">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 2 -->
+                    <div class="book-card">
+                        <div class="book-image">
+                            <!-- TODO: Agregar imagen del libro -->
+                            <img src="URL_LIBRO_2" alt="Libro 2">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-name">Nombre</div>
+                            <div class="book-price">Precio</div>
+                            <div class="book-actions">
+                                <button class="buy-button">Comprar</button>
+                                <span class="star-icon">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 3 -->
+                    <div class="book-card">
+                        <div class="book-image">
+                            <!-- TODO: Agregar imagen del libro -->
+                            <img src="URL_LIBRO_3" alt="Libro 3">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-name">Nombre</div>
+                            <div class="book-price">Precio</div>
+                            <div class="book-actions">
+                                <button class="buy-button">Comprar</button>
+                                <span class="star-icon">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 4 -->
+                    <div class="book-card">
+                        <div class="book-image">
+                            <!-- TODO: Agregar imagen del libro -->
+                            <img src="URL_LIBRO_4" alt="Libro 4">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-name">Nombre</div>
+                            <div class="book-price">Precio</div>
+                            <div class="book-actions">
+                                <button class="buy-button">Comprar</button>
+                                <span class="star-icon">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 5 -->
+                    <div class="book-card">
+                        <div class="book-image">
+                            <!-- TODO: Agregar imagen del libro -->
+                            <img src="URL_LIBRO_5" alt="Libro 5">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-name">Nombre</div>
+                            <div class="book-price">Precio</div>
+                            <div class="book-actions">
+                                <button class="buy-button">Comprar</button>
+                                <span class="star-icon">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recomendados Section -->
+            <div class="books-section">
+                <h2 class="section-title">Recomendados:</h2>
+                <div class="books-grid">
+                    <!-- Book 1 -->
+                    <div class="book-card">
+                        <div class="book-image">
+                            <!-- TODO: Agregar imagen del libro -->
+                            <img src="URL_LIBRO_REC_1" alt="Libro Recomendado 1">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-name">Nombre</div>
+                            <div class="book-price">Precio</div>
+                            <div class="book-actions">
+                                <button class="buy-button">Comprar</button>
+                                <span class="star-icon">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 2 -->
+                    <div class="book-card">
+                        <div class="book-image">
+                            <!-- TODO: Agregar imagen del libro -->
+                            <img src="URL_LIBRO_REC_2" alt="Libro Recomendado 2">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-name">Nombre</div>
+                            <div class="book-price">Precio</div>
+                            <div class="book-actions">
+                                <button class="buy-button">Comprar</button>
+                                <span class="star-icon">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 3 -->
+                    <div class="book-card">
+                        <div class="book-image">
+                            <!-- TODO: Agregar imagen del libro -->
+                            <img src="URL_LIBRO_REC_3" alt="Libro Recomendado 3">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-name">Nombre</div>
+                            <div class="book-price">Precio</div>
+                            <div class="book-actions">
+                                <button class="buy-button">Comprar</button>
+                                <span class="star-icon">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 4 -->
+                    <div class="book-card">
+                        <div class="book-image">
+                            <!-- TODO: Agregar imagen del libro -->
+                            <img src="URL_LIBRO_REC_4" alt="Libro Recomendado 4">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-name">Nombre</div>
+                            <div class="book-price">Precio</div>
+                            <div class="book-actions">
+                                <button class="buy-button">Comprar</button>
+                                <span class="star-icon">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Book 5 -->
+                    <div class="book-card">
+                        <div class="book-image">
+                            <!-- TODO: Agregar imagen del libro -->
+                            <img src="URL_LIBRO_REC_5" alt="Libro Recomendado 5">
+                        </div>
+                        <div class="book-info">
+                            <div class="book-name">Nombre</div>
+                            <div class="book-price">Precio</div>
+                            <div class="book-actions">
+                                <button class="buy-button">Comprar</button>
+                                <span class="star-icon">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="sidebar-right">
+            <!-- Escritores Independientes Section -->
+            <div class="sidebar-section writers">
+                <h2 class="section-title">Escritores Independientes</h2>
+                <div class="author-grid">
+                    <!-- Author 1 -->
+                    <div class="author-card">
+                        <div class="author-image">
+                            <!-- TODO: Agregar imagen del autor -->
+                            <img src="URL_AUTOR_1" alt="Autor 1">
+                        </div>
+                        <div class="author-name">Nombre de Autor</div>
+                    </div>
+
+                    <!-- Author 2 -->
+                    <div class="author-card">
+                        <div class="author-image">
+                            <!-- TODO: Agregar imagen del autor -->
+                            <img src="URL_AUTOR_2" alt="Autor 2">
+                        </div>
+                        <div class="author-name">Nombre de autor</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Autlores Section -->
+            <div class="sidebar-section authors">
+                <h2 class="section-title">Autlores</h2>
+                <div class="author-grid">
+                    <!-- Author 1 -->
+                    <div class="author-card">
+                        <div class="author-image">
+                            <!-- TODO: Agregar imagen del autor -->
+                            <img src="URL_AUTOR_3" alt="Autor 3">
+                        </div>
+                        <div class="author-name">Nombre de Autor</div>
+                    </div>
+
+                    <!-- Author 2 -->
+                    <div class="author-card">
+                        <div class="author-image">
+                            <!-- TODO: Agregar imagen del autor -->
+                            <img src="URL_AUTOR_4" alt="Autor 4">
+                        </div>
+                        <div class="author-name">Nombre de Autor</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Footer -->
     {% include 'components/footer.html' %}
 </body>
 </html>
