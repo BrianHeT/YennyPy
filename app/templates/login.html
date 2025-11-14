@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yenny - Iniciar Sesión / Registro</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="top-bar">
+        <button class="back-btn" onclick="window.history.back()">Volver</button>
+        <div class="logo-container">
+            <div class="logo">Yenny</div>
+        </div>
+        <button class="menu-icon">☰</button>
+    </div>
+
+    <div class="main-container">
+        <!-- Login Card -->
+        <div class="form-card">
+            <h2>Iniciar Sesión</h2>
+            <form action="/login" method="POST">
+                <div class="form-group">
+                    <label for="login-email">Ingrese Correo</label>
+                    <input type="email" id="login-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Ingrese contraseña</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <div class="forgot-password">
+                    <a href="/forgot-password">¿Olvidó su Contraseña?</a>
+                </div>
+                <button type="submit" class="submit-btn">Iniciar sesión</button>
+            </form>
+        </div>
+
+        <!-- Register Card -->
+        <div class="form-card">
+            <h2>Registro</h2>
+            <form action="/register" method="POST">
+                <div class="form-group">
+                    <label for="register-username">Ingrese Nombre de Usuario</label>
+                    <input type="text" id="register-username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Ingrese correo electrónico</label>
+                    <input type="email" id="register-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Ingrese contraseña</label>
+                    <input type="password" id="register-password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm">Vuelva a ingresar la contraseña</label>
+                    <input type="password" id="register-confirm" name="confirm_password" required>
+                </div>
+                <button type="submit" class="submit-btn">Registrarse</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
