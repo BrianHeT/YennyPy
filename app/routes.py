@@ -10,11 +10,11 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/")
 @app.route("/index")
 def index():
-    return render_template('index.html', title='Inicio')
+    return render_template('components/index.html', title='Inicio')
 
 @app.route("/about")
 def about():
-    return render_template('about.html', title='Acerca de')
+    return render_template('components/about.html', title='Acerca de')
 
 
 # -------------------- REGISTRO DE USUARIO --------------------
