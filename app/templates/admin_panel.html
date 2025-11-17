@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <h1>Panel de Administración</h1>
+
+    <aside class="admin-sidebar">
+        <nav>
+            {# Los enlaces usan ID de sección para la navegación JS #}
+            <a href="#books-management" class="sidebar-link active"> Gestión de Libros</a>
+            <a href="#queries-review" class="sidebar-link"> Consultas/Propuestas</a>
+            <a href="#user-list" class="sidebar-link"> Lista de Usuarios</a>
+            <a href="{{ url_for('index') }}" class="sidebar-link">← Volver al Inicio</a>
+        </nav>
+    </aside>
+
+    <main class="admin-content">
+        
+        {# ========================================================================= #}
+        {# 1. GESTIÓN DE LIBROS (Subir, Eliminar, Precio) #}
+        {# ========================================================================= #}
+        <section id="books-management" class="tab-content active">
+            <h2> Gestión de Libros</h2>
+            
+            {# --- Formulario para Crear/Subir Libro --- #}
+            <div class="card mb-4">
+                <h3>Subir Nuevo Libro</h3>
+                {# ACTION será gestionada por Flask: url_for('admin.add_book') #}
+                <form method="POST" action="/admin/books/add" enctype="multipart/form-data">
+                    {# Campos de formulario simulados. Jinja2 debe renderizarlos después. #}
+                    <div class="form-group">
+                        <label for="title">Título:</label>
+                        <input type="text" id="title" name="title" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Precio:</label>
+                        <input type="number" id="price" name="price" class="form-control" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Imagen de Portada (S3):</label>
+                        <input type="file" id="image" name="image" class="form-control-file">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success mt-3">Subir Libro</button>
+                </form>
+            </div>
+
+            {# --- Listado y Acciones de Libros Existentes (Tabla) --- #}
+            <h3>Libros Existentes</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Precio Actual</th>
+                        <th>Stock</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# Este bucle debe ser llenado con Jinja2: {% for book in books %} #}
+                    <tr>
+                        <td>101</td>
+                        <td>El Viaje del Analista</td>
+                        <td>
+                            <form method="POST" action="/admin/books/update/101">
+                                <input type="number" name="new_price" value="25.50" step="0.01" required>
+                                <button type="submit" class="btn-sm btn-update">Actualizar</button>
+                            </form>
+                        </td>
+                        <td>50</td>
+                        <td>
+                            <form method="POST" action="/admin/books/delete/101" style="display:inline;">
+                                <button type="submit" class="btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este libro?');">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {# {% endfor %} #}
+                    <tr>
+                        <td>102</td>
+                        <td>Metodologías Ágiles</td>
+                        <td>
+                            <form method="POST" action="/admin/books/update/102">
+                                <input type="number" name="new_price" value="32.00" step="0.01" required>
+                                <button type="submit" class="btn-sm btn-update">Actualizar</button>
+                            </form>
+                        </td>
+                        <td>12</td>
+                        <td>
+                            <form method="POST" action="/admin/books/delete/102" style="display:inline;">
+                                <button type="submit" class="btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar este libro?');">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        {# ========================================================================= #}
+        {# 2. REVISIÓN DE CONSULTAS Y PROPUESTAS #}
+        {# ========================================================================= #}
+        <section id="queries-review" class="tab-content">
+            <h2> Consultas y Propuestas Pendientes</h2>
+            <p>Sección para revisar manuscritos enviados por Autores o consultas de Editores.</p>
+            
+            <div class="query-card">
+                <h4>Propuesta: Nueva Novela de Ciencia Ficción</h4>
+                <p>Enviado por: <strong>Autor Juan Pérez</strong> (Rol: AUTOR)</p>
+                <p class="query-content">El manuscrito "El Viaje Estelar" ha sido subido y requiere revisión editorial y de calidad. El autor solicita un precio base de 20.00.</p>
+                <div class="query-actions">
+                    <button class="btn-sm btn-info">Revisar Archivo</button>
+                    <button class="btn-sm btn-success">Aprobar Publicación</button>
+                    <button class="btn-sm btn-warning">Rechazar/Archivar</button>
+                </div>
+            </div>
+
+            <div class="query-card">
+                <h4>Consulta: Problemas de Stock</h4>
+                <p>Enviado por: <strong>Editora Ana Gómez</strong> (Rol: EDITOR)</p>
+                <p class="query-content">El libro 'Historia de Flask' tiene stock cero y la demanda es alta. Se requiere reordenar la impresión urgente.</p>
+                <div class="query-actions">
+                    <button class="btn-sm btn-info">Ver Detalle</button>
+                    <button class="btn-sm btn-success">Marcar como Resuelto</button>
+                </div>
+            </div>
+            
+        </section>
+
+        {# ========================================================================= #}
+        {# 3. LISTA DE USUARIOS (Roles) #}
+        {# ========================================================================= #}
+        <section id="user-list" class="tab-content">
+            <h2> Lista de Usuarios Registrados</h2>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Acciones Admin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# Este bucle debe ser llenado con Jinja2: {% for user in users %} #}
+                    <tr>
+                        <td>1</td>
+                        <td>Rafael Macias</td>
+                        <td>rafael@example.com</td>
+                        <td><span class="role-tag admin">ADMIN</span></td>
+                        <td><button class="btn-sm btn-edit">Editar Rol/Suspender</button></td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Autor Juan Pérez</td>
+                        <td>juan.perez@author.com</td>
+                        <td><span class="role-tag author">AUTOR</span></td>
+                        <td><button class="btn-sm btn-edit">Editar Rol/Suspender</button></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Cliente Vanesa O.</td>
+                        <td>vanesa@client.com</td>
+                        <td><span class="role-tag client">CLIENTE</span></td>
+                        <td><button class="btn-sm btn-edit">Editar Rol/Suspender</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+
+</body>
+</html>
