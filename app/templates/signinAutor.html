@@ -8,7 +8,7 @@
 <body>
     <div class="profile-container">
     <aside class="sidebar-info">
-        {# --- Información Personal del Autor (user es el objeto author pasado desde la vista) --- #}
+         <!-- Información Personal del Autor (user es el objeto author pasado desde la vista) -->
         <div class="author-card">
             <img src="{{ url_for('static', filename='images/default_author.png') }}" alt="Foto de perfil de {{ author.first_name }}" class="profile-image">
             
@@ -23,7 +23,7 @@
 
             <div class="stats-card">
                 <h2>Estadísticas</h2>
-                {# Asume que tienes un método o propiedad para calcular el total de ventas #}
+                  <!-- calcular el total de ventas -->
                 <p>Libros Vendidos: <strong>{{ author.total_sold or 0 }}</strong></p>
                 <p>Libros Publicados: <strong>{{ author.books_written.count() }}</strong></p>
             </div>
@@ -34,13 +34,13 @@
 
     <main class="content-area">
         
-        {# --- Libros Publicados (Relación ya existente en el modelo Author) --- #}
+          <!-- Libros Publicados  -->
         <section id="published-books" class="books-section">
-            <h2>📚 Libros Publicados</h2>
+            <h2> Libros Publicados</h2>
             {% if author.books_written.count() > 0 %}
                 <div class="book-grid">
                     {% for book in author.books_written %}
-                        {# Asumiendo que el modelo Book tiene una propiedad 'is_approved' #}
+                          <!--  añadir una propiedad 'is_approved' o similar -->
                         {% if book.is_approved %}
                             <div class="book-item">
                                 <img src="{{ book.image or url_for('static', filename='images/default_book.png') }}" alt="{{ book.title }}">
@@ -56,9 +56,9 @@
             {% endif %}
         </section>
 
-        {# --- Libros en Espera de Aprobación --- #}
+       <!-- Libros en Espera de Aprobación -->
         <section id="pending-books" class="books-section mt-4">
-            <h2>⏳ En Espera de Aprobación</h2>
+            <h2> En Espera de Aprobación</h2>
             <div class="pending-list">
                 {% set pending_count = author.books_written.filter_by(is_approved=False).count() %}
                 
@@ -72,14 +72,14 @@
                         {% endfor %}
                     </ul>
                 {% else %}
-                    <p>¡No tienes libros en cola de revisión!</p>
+                    <p>No tienes libros en  revisión</p>
                 {% endif %}
             </div>
         </section>
 
-        {# --- Formulario de Publicación de Nuevo Libro --- #}
+          <!-- Formulario de Publicación de Nuevo Libro -->
         <section id="publish-book" class="form-section mt-5">
-            <h2>📝 Publicar Nuevo Libro</h2>
+            <h2>Publicar Nuevo Libro</h2>
             <p>Envía tu manuscrito para que el equipo editorial lo revise y apruebe.</p>
             
             <form method="POST" action="{{ url_for('submit_manuscript') }}" enctype="multipart/form-data">
@@ -105,7 +105,7 @@
             </form>
         </section>
         
-        {# --- Biografía Completa (Opcional, si es larga) --- #}
+          <!-- Biografía Completa (Opcional, si es larga) -->
         {% if author.biography %}
             <section id="biografia-completa" class="mt-5">
                 <h2>Biografía Completa</h2>
