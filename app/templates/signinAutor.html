@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!--ESTO A ES MODO DE EJEMPLO -->
+    <div class="profile-container">
+    <aside class="sidebar-info">
+         <!-- Información Personal del Autor (user es el objeto author pasado desde la vista) -->
+        <div class="author-card">
+            <img src="{{ url_for('static', filename='images/default_author.png') }}" alt="Foto de perfil de {{ author.first_name }}" class="profile-image">
+            
+            <h1>{{ author.first_name }} {{ author.last_name }}</h1>
+            
+            {% if author.biography %}
+                <p class="bio-summary">{{ author.biography | truncate(150) }}</p>
+                <a href="#biografia-completa">Leer biografía completa</a>
+            {% else %}
+                <p class="bio-summary">Aún no hay una biografía disponible.</p>
+            {% endif %}
+
+            <div class="stats-card">
+                <h2>Estadísticas</h2>
+                  <!-- calcular el total de ventas -->
+                <p>Libros Vendidos: <strong>{{ author.total_sold or 0 }}</strong></p>
+                <p>Libros Publicados: <strong>{{ author.books_written.count() }}</strong></p>
+            </div>
+            
+            <a href="{{ url_for('edit_profile') }}" class="btn-edit-profile">Editar Perfil</a>
+        </div>
+    </aside>
+
+    <main class="content-area">
+        
+          <!-- Libros Publicados  -->
+        <section id="published-books" class="books-section">
+            <h2> Libros Publicados</h2>
+            {% if author.books_written.count() > 0 %}
+                <div class="book-grid">
+                    {% for book in author.books_written %}
+                          <!--  añadir una propiedad 'is_approved' o similar -->
+                        {% if book.is_approved %}
+                            <div class="book-item">
+                                <img src="{{ book.image or url_for('static', filename='images/default_book.png') }}" alt="{{ book.title }}">
+                                <h3>{{ book.title }}</h3>
+                                <p>Precio: ${{ book.price }}</p>
+                                <a href="{{ url_for('book_detail', book_id=book.id) }}" class="btn-detail">Ver Detalle</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Aún no has publicado ningún libro.</p>
+            {% endif %}
+        </section>
+
+       <!-- Libros en Espera de Aprobación -->
+        <section id="pending-books" class="books-section mt-4">
+            <h2> En Espera de Aprobación</h2>
+            <div class="pending-list">
+                {% set pending_count = author.books_written.filter_by(is_approved=False).count() %}
+                
+                {% if pending_count > 0 %}
+                    <ul>
+                        {% for book in author.books_written.filter_by(is_approved=False) %}
+                            <li>
+                                <strong>{{ book.title }}</strong> (Enviado: {{ book.release_date.strftime('%d/%m/%Y') }}) 
+                                <span class="status">Revisando...</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No tienes libros en  revisión</p>
+                {% endif %}
+            </div>
+        </section>
+
+          <!-- Formulario de Publicación de Nuevo Libro -->
+        <section id="publish-book" class="form-section mt-5">
+            <h2>Publicar Nuevo Libro</h2>
+            <p>Envía tu manuscrito para que el equipo editorial lo revise y apruebe.</p>
+            
+            <form method="POST" action="{{ url_for('submit_manuscript') }}" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                
+                <div class="form-group">
+                    {{ form.title.label }}
+                    {{ form.title(class="form-control") }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.synopsis.label }}
+                    {{ form.synopsis(class="form-control", rows="5") }}
+                </div>
+                
+                <div class="form-group">
+                    {# Asume un campo FileField en tu formulario Flask #}
+                    {{ form.manuscript_file.label }}
+                    {{ form.manuscript_file(class="form-control-file") }}
+                </div>
+
+                {{ form.submit(class="btn-primary mt-3") }}
+            </form>
+        </section>
+        
+          <!-- Biografía Completa (Opcional, si es larga) -->
+        {% if author.biography %}
+            <section id="biografia-completa" class="mt-5">
+                <h2>Biografía Completa</h2>
+                <p>{{ author.biography }}</p>
+            </section>
+        {% endif %}
+
+    </main>
+</div>
+</body>
+</html>
