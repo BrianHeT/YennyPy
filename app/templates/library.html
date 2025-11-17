@@ -1,0 +1,24 @@
+{% include 'components/nav.html' %}
+
+{% block content %}
+    <h1>📚 Catálogo Completo de la Biblioteca</h1>
+    <p>Hemos encontrado un total de {{ books|length }} libros.</p>
+
+    <div class="book-list-container">
+        <div class="book-grid">
+            {% for book in books %}
+                <div class="book-card">
+                    <img src="{{ url_for('static', filename='covers/' + book.image) }}" alt="Portada de {{ book.title }}" class="book-cover">
+                    
+                    <h3 class="book-title">{{ book.title }}</h3>
+                    <p class="book-price">${{ "%.2f" | format(book.price) }}</p>
+                    
+                    <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="btn btn-sm btn-info">Ver Detalles</a>
+                </div>
+            {% else %}
+                <p>No hay libros registrados en el catálogo.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}
+
