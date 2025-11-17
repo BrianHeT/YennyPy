@@ -22,9 +22,10 @@ def create_app():
     DB_URL = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'site.db')
     if DB_URL.startswith("postgres://"):
         DB_URL = DB_URL.replace("postgres://", "postgresql://")
-    app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL + "?sslmode=require"
+    
 
     app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
+    app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL + "?sslmode=require"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'tu_clave_secreta_aqui'
     
