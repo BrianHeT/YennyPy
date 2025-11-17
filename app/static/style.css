@@ -608,3 +608,38 @@ body-index {
 
 /* ------------------------ FIN INDEX ------------------------------------*/
 
+.google-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: 48px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 24px;
+    text-decoration: none;
+    color: #1a1a1a;
+    background-color: white;
+    border: 2px solid #747775;
+    border-radius: 12px;
+    box-shadow: 0 0 0 2px #6b7280;
+    margin-bottom: 16px;
+    transition: background-color 0.2s ease;
+}
+
+.google-login-btn:hover {
+    background-color: #f9fafb;
+    text-decoration: none;
+    color: #1a1a1a;
+}
+
+.google-login-btn:active {
+    background-color: #f3f4f6;
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}

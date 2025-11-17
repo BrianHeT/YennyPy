@@ -23,7 +23,17 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'tu_clave_secreta_aqui'
-
+    
+# --- Configuración de Google Auth ---
+    app.config['GOOGLE_CLIENT_ID'] = os.environ.get("GOOGLE_CLIENT_ID")
+    app.config['GOOGLE_CLIENT_SECRET'] = os.environ.get("GOOGLE_CLIENT_SECRET")
+# Definimos el SCOPE y la URL de autorización de Google
+    app.config['GOOGLE_SCOPE'] = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile'
+]
+# URL de API para obtener el perfil de usuario (People API)
+    app.config['GOOGLE_USER_INFO_URL'] = 'https://www.googleapis.com/oauth2/v1/userinfo'
     # Inicializar extensiones
     database.init_app(app)
     bcrypt.init_app(app)
