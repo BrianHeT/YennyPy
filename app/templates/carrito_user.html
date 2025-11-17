@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Tu Carrito de Compras</h1>
+    
+    {# 
+        Esta sección se muestra si la lista 'cart_items' (pasada desde Flask) NO está vacía.
+        Asumimos que 'cart_items' es una lista de objetos CartItem, y cada CartItem 
+        tiene una propiedad 'book' y una propiedad 'cantidad'.
+    #}
+    {% if cart_items %}
+    
+        <div class="cart-items-list">
+            {% for item in cart_items %}
+            
+            <div class="cart-item-card">
+                
+                <div class="item-details">
+                    <img src="{{ item.book.image or url_for('static', filename='images/default_book.png') }}" alt="{{ item.book.title }}" class="item-image">
+                    
+                    <div class="item-info">
+                        <h3>{{ item.book.title }}</h3>
+                        <p class="item-price">${{ item.book.price | round(2) }} x {{ item.cantidad }} unidad(es)</p>
+                        
+                        {# Botón para ver el producto (Usando el ID del libro) #}
+                        <a href="{{ url_for('book_detail', book_id=item.book.id) }}" class="btn-sm btn-info">
+                            Ver Producto
+                        </a>
+                    </div>
+                </div>
+
+                <div class="item-actions">
+                    {# Formulario para ELIMINAR del carrito (Requiere método POST y el ID del item de carrito) #}
+                    <form method="POST" action="{{ url_for('cart_remove_item', item_id=item.id) }}">
+                        <button type="submit" class="btn-sm btn-danger">
+                            Eliminar del Carrito
+                        </button>
+                    </form>
+                    
+                    {# Muestra el subtotal del ítem #}
+                    <div class="item-subtotal">
+                        Subtotal: <strong>${{ (item.book.price * item.cantidad) | round(2) }}</strong>
+                    </div>
+                </div>
+            </div>
+            
+            {% endfor %}
+        </div>
+        
+        <div class="cart-summary">
+            {# 
+                Aquí asumimos que la variable 'total_price' será calculada y pasada 
+                por la función de vista en Flask.
+            #}
+            <h2>Total a Pagar: <strong>${{ total_price | round(2) }}</strong></h2>
+
+            {# Botón para COMPRAR TODO (Inicia el proceso de checkout) #}
+            <a href="{{ url_for('checkout') }}" class="btn-primary btn-checkout">
+                Comprar Todo
+            </a>
+            
+            <a href="{{ url_for('library') }}" class="btn-secondary">
+                Continuar Comprando
+            </a>
+        </div>
+
+    {% else %}
+        
+        <div class="empty-cart-message">
+            <p>Tu carrito de compras está vacío.</p>
+            <a href="{{ url_for('library') }}" class="btn-primary">Explorar Libros</a>
+        </div>
+        
+    {% endif %}
+</body>
+</html>
