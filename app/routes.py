@@ -16,6 +16,10 @@ def index():
 def about():
     return render_template('about.html', title='Acerca de')
 
+@app.route("/signinautor")
+def signinautor():
+    return render_template('signinautor.html', title='perfil Autor')
+
 
 # -------------------- REGISTRO DE USUARIO --------------------
 
