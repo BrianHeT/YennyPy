@@ -66,19 +66,37 @@ def register():
 
 @bp.route("/login", methods=['GET', 'POST'])
 def login():
+    # 1. Si ya está autenticado, redirigir al índice.
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
+    
+    # 2. Procesar la solicitud POST del formulario de inicio de sesión.
     if request.method == 'POST':
+        # Obtener el usuario por email
         user = User.query.filter_by(email=request.form.get('email')).first()
         
+        # 3. Verificar usuario y contraseña (UNA SOLA VEZ)
         if user and bcrypt.check_password_hash(user.password_hash, request.form.get('password')):
+            
+            # Iniciar sesión
             login_user(user, remember=True) 
+            
+            # 🚨 LÓGICA DE REDIRECCIÓN (Control de Rol) 🚨
+            
+            # Si es Administrador, redirigir al Panel de Admin.
+            if user.is_admin:
+                return redirect(url_for('admin.panel_admin'))
+                
+            # Si no es admin, redirigir a la página solicitada o al índice.
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('main.index'))
+            
         else:
+            # Fallo en la verificación de credenciales
             flash('Error de inicio de sesión. Por favor, verifica el email y la contraseña.', 'danger')
 
-    return render_template('login.html', title='Iniciar Sesión') 
+    # 4. Mostrar la plantilla de inicio de sesión (Método GET o después de un POST fallido).
+    return render_template('login.html', title='Iniciar Sesión')
 
 @bp.route("/login/google") 
 def login_google():
