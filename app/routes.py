@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, login_required, current_user
 from . import database, bcrypt
 from .models import User, Book
-from .forms import RegistrationForm
+from .forms import RegistrationForm, LoginForm
 import json
 from oauthlib.oauth2 import WebApplicationClient
 import requests
@@ -44,60 +44,59 @@ def book_detail(book_id):
                            book=book)
 
 # -------------------- REGISTRO DE USUARIO --------------------
-
-@bp.route("/register", methods=['GET', 'POST'])
+@bp.route("/register")
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
-    
-    form = RegistrationForm()
-    
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(name=form.name.data, email=form.email.data, password_hash=hashed_password)
-        database.session.add(user)
-        database.session.commit()
-        flash(f'¡Cuenta creada para {form.name.data}! Ahora puedes iniciar sesión.', 'success')
-        return redirect(url_for('main.login'))
-        
-    return render_template('register.html', title='Registro', form=form)
+    return redirect(url_for('main.auth'))
 
-# -------------------- INICIO DE SESIÓN --------------------
-
-@bp.route("/login", methods=['GET', 'POST'])
+@bp.route("/login")
 def login():
-    # 1. Si ya está autenticado, redirigir al índice.
+    return redirect(url_for('main.auth'))
+
+
+@bp.route("/auth", methods=['GET', 'POST'])
+def auth():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     
-    # 2. Procesar la solicitud POST del formulario de inicio de sesión.
-    if request.method == 'POST':
-        # Obtener el usuario por email
-        user = User.query.filter_by(email=request.form.get('email')).first()
+    login_form = LoginForm(prefix='login')
+    register_form = RegistrationForm(prefix='register')
+    
+    # Manejar login
+    if login_form.validate_on_submit() and 'login-submit' in request.form:
+        user = User.query.filter_by(email=login_form.email.data).first()
         
-        # 3. Verificar usuario y contraseña (UNA SOLA VEZ)
-        if user and bcrypt.check_password_hash(user.password_hash, request.form.get('password')):
+        if user and bcrypt.check_password_hash(user.password_hash, login_form.password.data):
+            login_user(user, remember=login_form.remember.data)
             
-            # Iniciar sesión
-            login_user(user, remember=True) 
-            
-            # 🚨 LÓGICA DE REDIRECCIÓN (Control de Rol) 🚨
-            
-            # Si es Administrador, redirigir al Panel de Admin.
             if user.is_admin:
                 return redirect(url_for('admin.panel_admin'))
                 
-            # Si no es admin, redirigir a la página solicitada o al índice.
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('main.index'))
-            
         else:
-            # Fallo en la verificación de credenciales
             flash('Error de inicio de sesión. Por favor, verifica el email y la contraseña.', 'danger')
+    
+    # Manejar registro
+    if register_form.validate_on_submit() and 'register-submit' in request.form:
+        try:
+            existing_user = User.query.filter_by(email=register_form.email.data).first()
+            if existing_user:
+                flash('Este email ya está registrado. Por favor usa otro.', 'warning')
+            else:
+                hashed_password = bcrypt.generate_password_hash(register_form.password.data).decode('utf-8')
+                user = User(name=register_form.name.data, email=register_form.email.data, password_hash=hashed_password)
+                database.session.add(user)
+                database.session.commit()
+                flash(f'¡Cuenta creada para {register_form.name.data}! Ahora puedes iniciar sesión.', 'success')
+                return redirect(url_for('main.auth'))
+        except Exception as e:
+            database.session.rollback()
+            flash('Error al crear la cuenta.', 'danger')
+    
+    return render_template('auth.html', login_form=login_form, register_form=register_form)
 
-    # 4. Mostrar la plantilla de inicio de sesión (Método GET o después de un POST fallido).
-    return render_template('login.html', title='Iniciar Sesión')
 
+# -------------------- AUTENTICACIÓN CON GOOGLE --------------------
 @bp.route("/login/google") 
 def login_google():
     if current_user.is_authenticated:

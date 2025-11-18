@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yenny - Iniciar Sesión / Registro</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Mensajes Flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" onclick="this.parentElement.style.display='none'">×</button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="top-bar">
+        <button class="back-btn" onclick="window.history.back()">Volver</button>
+        <div class="logo-container">
+            <div class="logo">Yenny</div>
+        </div>
+        <button class="menu-icon">☰</button>
+    </div>
+
+    <div class="forms-container">
+        <!-- Login Card -->
+        <div class="form-card">
+            <h2>Iniciar Sesión</h2>
+            <form method="POST" action="{{ url_for('main.auth') }}">
+                {{ login_form.hidden_tag() }}
+                
+                <div class="form-group">
+                    <label for="login-email">Ingrese Correo</label>
+                    {{ login_form.email(id="login-email") }}
+                    {% if login_form.email.errors %}
+                        {% for error in login_form.email.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">Ingrese contraseña</label>
+                    {{ login_form.password(id="login-password") }}
+                    {% if login_form.password.errors %}
+                        {% for error in login_form.password.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    {{ login_form.remember(id="login-remember") }}
+                    <label for="login-remember">Recordarme</label>
+                </div>
+                
+                <div class="forgot-password">
+                    <a href="/forgot-password">¿Olvidó su Contraseña?</a>
+                </div>
+                
+                <button type="submit" name="login-submit" class="submit-btn">Iniciar sesión</button>
+            </form>
+            
+            <div class="mt-3 text-center">
+                <p>--- O ---</p>
+                <a href="{{ url_for('main.login_google') }}" class="google-login-btn">
+                    <img src="https://www.googleapis.com/favicon.ico" alt="Google" class="google-icon" />
+                    <span>LOGIN WITH GOOGLE</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Register Card -->
+        <div class="form-card">
+            <h2>Registro</h2>
+            <form action="{{ url_for('main.auth') }}" method="POST">
+                {{ register_form.hidden_tag() }}
+                
+                <div class="form-group">
+                    <label for="register-name">Ingrese Nombre de Usuario</label>
+                    {{ register_form.name(id="register-name") }}
+                    {% if register_form.name.errors %}
+                        {% for error in register_form.name.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-email">Ingrese correo electrónico</label>
+                    {{ register_form.email(id="register-email") }}
+                    {% if register_form.email.errors %}
+                        {% for error in register_form.email.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-password">Ingrese contraseña</label>
+                    {{ register_form.password(id="register-password") }}
+                    {% if register_form.password.errors %}
+                        {% for error in register_form.password.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-confirm">Vuelva a ingresar la contraseña</label>
+                    {{ register_form.confirm_password(id="register-confirm") }}
+                    {% if register_form.confirm_password.errors %}
+                        {% for error in register_form.confirm_password.errors %}
+                            <small class="text-danger">{{ error }}</small>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <button type="submit" name="register-submit" class="submit-btn">Registrarse</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
