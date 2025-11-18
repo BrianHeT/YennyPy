@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 # Importamos la base de datos y los modelos
-from app.models import User, Book, Author, Genre, database as db 
+from app.models import User, Book, Author, Genre, database  as db
 # ⚠️ Asegúrate de importar tu formulario (ej: from .forms import BookForm)
 # from .forms import BookForm 
 

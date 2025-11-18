@@ -1,18 +1,14 @@
 import os
 from datetime import datetime
-from app import create_app, database
-from app.models import Book
+from app import create_app 
+from app import database, bcrypt 
+from app.models import Book, User 
 
+ADMIN_EMAIL = 'yenny@yenny.com'
+ADMIN_NAME = 'Yenny'
+ADMIN_PASSWORD = 'yenny' 
 
-app = create_app()
-
-with app.app_context():
-    print("Eliminando libros existentes...")
-    Book.query.delete()
-
-    print("Sembrando nuevos libros...")
-    
-    book_data = [
+book_data = [
         {
             'title': 'AMANECER EN LA COSECHA (JUEGOS HAMBRE 5)',
             'price': 34999, 
@@ -81,30 +77,62 @@ with app.app_context():
         },
     ]
 
-    # Iterar sobre los datos y crear objetos Book
-    for data in book_data:
+
+app = create_app()
+
+with app.app_context():
+    
+    # Eliminar datos existentes
+    print("Eliminando datos existentes (Libros y Usuarios)...")
+    Book.query.delete()
+    User.query.delete() #elimina usuarios también para evitar duplicados
+    database.session.commit()
+
+    # Sembrar Libros
+    print("Sembrando libros...")
+    
+    for data in book_data.copy():
+        date_str = str(data['release_date'])[:10]
+        release_date_obj = datetime.strptime(date_str, '%Y-%m-%d')
+        
         book = Book(
-            title=data["title"],
-            price=data["price"],
-            release_date=data["release_date"],
-            format=data["format"],
-            editorial=data["editorial"],
-            author_name=data["author_name"],
-            synopsis=data["synopsis"],
-            image=data["image"],
-            quantity=data["quantity"]
+            title=data['title'],
+            price=data['price'] / 100.0,
+            release_date=release_date_obj,
+            format=data['format'],
+            editorial=data['editorial'],
+            author_name=data['author_name'], 
+            synopsis=data['synopsis'],
+            image=data['image'],
+            quantity=data['quantity']
         )
         database.session.add(book)
 
+    print(f"Se han sembrado {len(book_data)} libros en la base de datos.")
 
-# 2.1. Usuario Administrador
-    admin_password = bcrypt.generate_password_hash("admin123").decode('utf-8')
-    admin_user = User(
-        name='Admin',
-        email='admin@yenny.com',
-        password_hash=admin_password,
-        is_admin=True # ⬅ Define como administrador
-    )
-    database.session.add(admin_user)
-    database.session.commit()
-    print(f"¡Listo! Se han agregado {len(book_data)} libros.")
+    # Sembrar Usuario Administrador
+    print(f"\nVerificando y creando usuario administrador: {ADMIN_EMAIL}...")
+    
+    # Verificamos si ya existe
+    admin_exists = User.query.filter_by(email=ADMIN_EMAIL).first()
+
+    if not admin_exists:
+        # Hashear la contraseña usando la instancia bcrypt
+        hashed_password = bcrypt.generate_password_hash(ADMIN_PASSWORD).decode('utf-8')
+        
+        admin_user = User(
+            name=ADMIN_NAME,
+            email=ADMIN_EMAIL,
+            password_hash=hashed_password,
+            is_admin=True #Permisos de Admin
+        )
+
+        database.session.add(admin_user)
+        database.session.commit()
+        
+        print(f"Usuario Administrador creado: {ADMIN_EMAIL}")
+        print(f"   Contraseña: {ADMIN_PASSWORD}")
+    else:
+        print(f"Usuario Administrador ya existe.")
+
+    print("\n--- Proceso de siembra finalizado. ---")

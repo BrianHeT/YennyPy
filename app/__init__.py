@@ -4,11 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
+from app.extensions import database, bcrypt
+
 
 # --- Instancias de extensiones (sin app todavía) ---
-
-database = SQLAlchemy()
-bcrypt = Bcrypt()
 login_manager = LoginManager()
 migrate = Migrate()
 
@@ -17,6 +16,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 def create_app():
     app = Flask(__name__)
+
+
 
     # Configuración de base de datos
     DB_URL = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'site.db')
@@ -64,7 +65,8 @@ def create_app():
         return User.query.get(int(user_id))
 
     # Registrar blueprint
-    from .routes import bp
-    app.register_blueprint(bp)
+    from .blueprints import blueprints
+    for bp in blueprints:
+        app.register_blueprint(bp)
 
     return app

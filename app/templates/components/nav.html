@@ -23,11 +23,11 @@
             </div>
 
             {% if current_user.is_authenticated %}
-            <a href="{{ url_for('main.logout') }}" class="auth-button">
+            <a href="{{ url_for('auth.logout') }}" class="auth-button">
                 Cerrar sesión
             </a>
             {% else %}
-            <a href="{{ url_for('main.login') }}" class="auth-button">
+            <a href="{{ url_for('auth.auth') }}" class="auth-button">
                 Iniciar sesión/Registrarse
             </a>
             {% endif %}

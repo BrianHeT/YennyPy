@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_user, logout_user, login_required, current_user
-from . import database, bcrypt
-from .models import User, Book
-from .forms import RegistrationForm, LoginForm
-import json
+from app.extensions import database, bcrypt
+from app.models import User
+from app.forms import RegistrationForm, LoginForm
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 from urllib.parse import urlencode, urlunparse
@@ -14,46 +13,10 @@ GOOGLE_DISCOVERY_URL = (
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
-
 # Crear el blueprint
-bp = Blueprint('main', __name__)
-
-# -------------------- RUTAS PÚBLICAS --------------------
-
-@bp.route("/")
-@bp.route("/index")
-def index():
-    return render_template('index.html', title='Inicio')
-
-@bp.route("/about")
-def about():
-    return render_template('about.html', title='Acerca de')
-
-# -------------------- CATÁLOGO DE LIBROS --------------------
-@bp.route("/library")
-def library():
-    all_books = Book.query.order_by(Book.title.asc()).all()
-    return render_template('library.html', title='Biblioteca Completa', books=all_books)
-
-# -------------------- DETALLE DEL LIBRO --------------------
-@bp.route("/book/<int:book_id>")
-def book_detail(book_id):
-    book = Book.query.get_or_404(book_id)
-    return render_template('book_detail.html', 
-                           title=book.title, 
-                           book=book)
-
-# -------------------- REGISTRO DE USUARIO --------------------
-@bp.route("/register")
-def register():
-    return redirect(url_for('main.auth'))
-
-@bp.route("/login")
-def login():
-    return redirect(url_for('main.auth'))
-
-
-@bp.route("/auth", methods=['GET', 'POST'])
+bp_auth = Blueprint('auth', __name__)
+# -------------------- RUTA DE AUTENTICACIÓN (LOGIN/REGISTRO) --------------------
+@bp_auth.route("/auth", methods=['GET', 'POST'])
 def auth():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -88,7 +51,7 @@ def auth():
                 database.session.add(user)
                 database.session.commit()
                 flash(f'¡Cuenta creada para {register_form.name.data}! Ahora puedes iniciar sesión.', 'success')
-                return redirect(url_for('main.auth'))
+                return redirect(url_for('auth.auth'))
         except Exception as e:
             database.session.rollback()
             flash('Error al crear la cuenta.', 'danger')
@@ -97,7 +60,7 @@ def auth():
 
 
 # -------------------- AUTENTICACIÓN CON GOOGLE --------------------
-@bp.route("/login/google") 
+@bp_auth.route("/login/google") 
 def login_google():
     if current_user.is_authenticated:
         
@@ -119,7 +82,7 @@ def login_google():
     return redirect(request_uri)
 
 
-@bp.route("/callback/google")
+@bp_auth.route("/callback/google")
 def callback_google():
     
     client = WebApplicationClient(current_app.config['GOOGLE_CLIENT_ID'])
@@ -170,18 +133,16 @@ def callback_google():
     else:
         flash("El email de Google no pudo ser verificado.", 'danger')
         
-        return redirect(url_for('main.login'))
+        return redirect(url_for('auth.auth'))
     
 # -------------------- CIERRE DE SESIÓN --------------------
 
-@bp.route("/logout")
+@bp_auth.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
 
-# -------------------- RUTA PERFIL USUARIO --------------------
-
-@bp.route("/profile")
+@bp_auth.route("/profile")
 @login_required 
 def profile():
     return render_template('profile.html', title='Perfil', user=current_user)
