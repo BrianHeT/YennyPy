@@ -32,7 +32,7 @@ def auth():
             login_user(user, remember=login_form.remember.data)
             
             if user.is_admin:
-                return redirect(url_for('admin.panel_admin'))
+                return redirect(url_for('admin.admin_panel'))
                 
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('main.index'))

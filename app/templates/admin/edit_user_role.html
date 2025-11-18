@@ -1,0 +1,11 @@
+<h2>Editar rol de {{ user.name }}</h2>
+
+<form method="POST">
+    <label>Rol:</label>
+    <select name="role">
+        <option value="user" {% if not user.is_admin %}selected{% endif %}>Usuario</option>
+        <option value="admin" {% if user.is_admin %}selected{% endif %}>Administrador</option>
+    </select>
+
+    <button type="submit">Guardar</button>
+</form>
