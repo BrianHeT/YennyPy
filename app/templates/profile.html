@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Menú de Usuario</h1>
+
+<h2>Información personal</h2>
+<form method="POST">
+    <label>Nombre:</label><br>
+    <input type="text" name="nombre" value="{{ usuario.nombre }}"><br><br>
+
+    <label>Nueva contraseña:</label><br>
+    <input type="password" name="password"><br><br>
+
+    <button type="submit">Actualizar</button>
+</form>
+
+<h2>Rol</h2>
+<p>{{ 'Autor' if usuario.es_autor else 'Lector' }}</p>
+
+<h2>Compras realizadas</h2>
+{% if compras %}
+<table>
+    <tr><th>Título</th><th>Precio</th></tr>
+    {% for item in compras %}
+    <tr>
+        <td>{{ item.libro.titulo }}</td>
+        <td>${{ item.libro.precio }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No has realizado compras aún.</p>
+{% endif %}
+
+<a href="{{ url_for('usuarios.logout') }}">Cerrar sesión</a>
+
+</body>
+</html>
