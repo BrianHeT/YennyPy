@@ -1,11 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-# Importamos la base de datos y los modelos
 from app.models import User, Book, Author, Genre, database  as db
 # ⚠️ Asegúrate de importar tu formulario (ej: from .forms import BookForm)
 # from .forms import BookForm 
 
-admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+bp_admin = Blueprint('admin', __name__, url_prefix='/admin')
 
 # --- Middleware de Verificación de Acceso de Administrador ---
 def check_admin_access():
@@ -19,7 +18,7 @@ def check_admin_access():
 
 # 1. RUTA READ/DASHBOARD (Listado principal de libros y usuarios)
 # La ruta final será: /admin/
-@admin_bp.route('/')
+@bp_admin.route('/')
 @login_required
 def admin_panel():
     if check_admin_access():
@@ -31,7 +30,7 @@ def admin_panel():
     # Aquí puedes pasar el formulario para la sección de 'Agregar Libro'
     # add_book_form = BookForm()
     
-    return render_template('admin_panel.html', 
+    return render_template('admin/admin_panel.html', 
                            users=users, 
                            books=books,
                            # form=add_book_form, 
@@ -40,7 +39,7 @@ def admin_panel():
 
 # 2. RUTA CREATE (Agregar Nuevo Libro)
 # La ruta final será: /admin/books/add
-@admin_bp.route("/books/add", methods=['GET', 'POST'])
+@bp_admin.route("/books/add", methods=['GET', 'POST'])
 @login_required
 def add_book():
     if check_admin_access():
@@ -73,7 +72,7 @@ def add_book():
 
 # 3. RUTA UPDATE (Editar detalles de un libro existente)
 # La ruta final será: /admin/books/edit/123
-@admin_bp.route("/books/edit/<int:book_id>", methods=['GET', 'POST'])
+@bp_admin.route("/books/edit/<int:book_id>", methods=['GET', 'POST'])
 @login_required
 def edit_book(book_id):
     if check_admin_access():
@@ -105,7 +104,7 @@ def edit_book(book_id):
 
 # 4. RUTA DELETE (Eliminar Libro)
 # La ruta final será: /admin/books/delete/123
-@admin_bp.route("/books/delete/<int:book_id>", methods=['POST'])
+@bp_admin.route("/books/delete/<int:book_id>", methods=['POST'])
 @login_required
 def delete_book(book_id):
     if check_admin_access():
@@ -126,3 +125,20 @@ def delete_book(book_id):
         flash(f'Error al eliminar el libro: {e}', 'danger')
     
     return redirect(url_for('admin.admin_panel'))
+
+@bp_admin.route("/edit-role/<int:user_id>", methods=["GET", "POST"])
+def edit_user_role(user_id):
+    user = User.query.get(user_id)
+    if user is None:
+        flash('Usuario no encontrado.', 'warning')
+        return redirect(url_for('admin.admin_panel'))
+
+    if request.method == "POST":
+        new_role = request.form.get("role")
+        user.is_admin = (new_role == "admin")
+        db.session.commit()
+        flash(f'Rol de {user.name} actualizado a {new_role}.', 'success')
+        return redirect(url_for('admin.admin_panel'))
+
+    return render_template("admin/edit_user_role.html", user=user)
+
