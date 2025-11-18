@@ -96,5 +96,15 @@ with app.app_context():
         )
         database.session.add(book)
 
+
+# 2.1. Usuario Administrador
+    admin_password = bcrypt.generate_password_hash("admin123").decode('utf-8')
+    admin_user = User(
+        name='Admin',
+        email='admin@yenny.com',
+        password_hash=admin_password,
+        is_admin=True # ⬅ Define como administrador
+    )
+    database.session.add(admin_user)
     database.session.commit()
     print(f"¡Listo! Se han agregado {len(book_data)} libros.")
