@@ -22,9 +22,15 @@
                 <input type="text" class="search-input" placeholder="Buscar...">
             </div>
 
-            <a href="{{ url_for('main.login') }}" class="auth-button">
-            Iniciar sesión/Registrarse
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('main.logout') }}" class="auth-button">
+                Cerrar sesión
             </a>
+            {% else %}
+            <a href="{{ url_for('main.login') }}" class="auth-button">
+                Iniciar sesión/Registrarse
+            </a>
+            {% endif %}
 
             <div class="menu-icon">
                 <span></span>
