@@ -22,9 +22,9 @@
                 <input type="text" class="search-input" placeholder="Buscar...">
             </div>
 
-            <button class="auth-button" onclick="window.location.href='/login'">
-                Iniciar sesión/Registrarse
-            </button>
+            <a href="{{ url_for('main.login') }}" class="auth-button">
+            Iniciar sesión/Registrarse
+            </a>
 
             <div class="menu-icon">
                 <span></span>

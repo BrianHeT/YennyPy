@@ -1,8 +1,8 @@
-"""Creación o actualización de tablas faltantes
+"""migracion inicial
 
-Revision ID: e11dcd6a322b
-Revises: 398b93f294a4
-Create Date: 2025-11-17 02:50:36.353623
+Revision ID: 63bd1314a3b4
+Revises: 
+Create Date: 2025-11-18 14:01:10.108775
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e11dcd6a322b'
-down_revision = '398b93f294a4'
+revision = '63bd1314a3b4'
+down_revision = None
 branch_labels = None
 depends_on = None
 
