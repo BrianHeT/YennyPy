@@ -41,7 +41,7 @@
             <div class="card mb-4">
                 <h3>Subir Nuevo Libro</h3>
                 {# Vinculado a la RUTA CREATE: /admin/books/add #}
-                <a href="{{ url_for('admin.add_book') }}" class="btn btn-success mt-3">Ir a Formulario de Subida</a>
+                <a href="{{ url_for('books.create_book') }}" class="btn btn-success mt-3">Ir a Formulario de Subida</a>
             </div>
 
             {# --- Listado y Acciones de Libros Existentes (Tabla) --- #}
@@ -69,10 +69,10 @@
                         <td>{{ book.quantity }}</td>
                         <td>
                             {# RUTA UPDATE: /admin/books/edit/<id> #}
-                            <a href="{{ url_for('admin.edit_book', book_id=book.id) }}" class="btn-sm btn-edit">Editar</a>
+                            <a href="{{ url_for('books.edit_book', book_id=book.id) }}" class="btn-sm btn-edit">Editar</a>
 
                             {# RUTA DELETE: /admin/books/delete/<id> (Método POST) #}
-                            <form method="POST" action="{{ url_for('admin.delete_book', book_id=book.id) }}" style="display:inline;">
+                            <form method="POST" action="{{ url_for('books.delete_book', book_id=book.id) }}" style="display:inline;">
                                 <button type="submit" class="btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar el libro {{ book.title }}?');">Eliminar</button>
                             </form>
                         </td>
