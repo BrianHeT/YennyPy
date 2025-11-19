@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="support-container">
+    <div class="support-card">
+        {#  Modelo temporal hasta hacer bien las rutas
+        #}
+        
+        
+        <h1>Centro de Ayuda y Soporte</h1>
+        <p>¿Tienes alguna duda sobre tu pedido, el catálogo o necesitas ayuda para publicar tu manuscrito? Envíanos un mensaje y te responderemos a la brevedad.</p>
+        
+        {# 
+          Si el usuario está logueado, asumimos que su nombre y correo ya son conocidos 
+          (Usando current_user).
+        #}
+        
+        {# Vinculado a la ruta que procesará el mensaje, ej: url_for('main.handle_support') #}
+        <form method="POST" action="{{ url_for('main.support') }}" class="support-form">
+            
+            {% if not current_user.is_authenticated %}
+                <div class="form-group">
+                    <label for="name">Tu Nombre:</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Tu Correo Electrónico:</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+            {% else %}
+                <p>Enviando como: <strong>{{ current_user.name }} ({{ current_user.email }})</strong></p>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="subject">Asunto:</label>
+                <input type="text" id="subject" name="subject" class="form-control" placeholder="Ej: Problema con mi pedido #1234" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Tu Consulta:</label>
+                <textarea id="message" name="message" rows="6" class="form-control" placeholder="Describe tu problema o duda aquí." required></textarea>
+            </div>
+            
+            <button type="submit" class="btn-primary mt-4">Enviar Mensaje</button>
+        </form>
+        
+    </div>
+</div>
+</body>
+</html>
