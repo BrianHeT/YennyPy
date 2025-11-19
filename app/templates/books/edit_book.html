@@ -1,0 +1,76 @@
+{% block content %}
+<div class="container py-4">
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <h4 class="mb-3">Editar libro</h4>
+      <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+          {{ form.title.label(class="form-label") }}
+          {{ form.title(class="form-control") }}
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            {{ form.price.label(class="form-label") }}
+            {{ form.price(class="form-control") }}
+          </div>
+          <div class="col-md-6 mb-3">
+            {{ form.quantity.label(class="form-label") }}
+            {{ form.quantity(class="form-control") }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          {{ form.release_date.label(class="form-label") }}
+          {{ form.release_date(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.format.label(class="form-label") }}
+          {{ form.format(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.editorial.label(class="form-label") }}
+          {{ form.editorial(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.author_name.label(class="form-label") }}
+          {{ form.author_name(class="form-control") }}
+        </div>
+
+        <div class="mb-3">
+          {{ form.synopsis.label(class="form-label") }}
+          {{ form.synopsis(class="form-control", rows="4") }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Géneros</label>
+          <select name="genres" multiple class="form-select">
+            {% for id, name in form.genres.choices %}
+              <option value="{{ id }}" {% if id in form.genres.data %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Portada actual</label>
+          {% if book.image %}
+            <img src="{{ generate_presigned_url_for_key(book.image) }}" alt="portada" style="max-height:160px;object-fit:cover;">
+          {% else %}
+            <div style="height:160px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;color:#999;">Sin imagen</div>
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          {{ form.image.label(class="form-label") }}
+          <input type="file" name="image" class="form-control" accept="image/*">
+          <div class="form-text">Subí una nueva para reemplazar la actual</div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-success">Guardar cambios</button>
+

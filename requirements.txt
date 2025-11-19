@@ -1,4 +1,5 @@
 bcrypt==5.0.0
+boto3
 blue-prints
 email-validator
 Flask==3.0.3

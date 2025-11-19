@@ -16,8 +16,12 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 def create_app():
     app = Flask(__name__)
-
-
+    # Configuraciones de AWS S3
+    app.config['AWS_ACCESS_KEY_ID'] = os.environ.get("AWS_ACCESS_KEY_ID")
+    app.config['AWS_SECRET_ACCESS_KEY'] = os.environ.get("AWS_SECRET_ACCESS_KEY")
+    app.config['AWS_S3_BUCKET'] = os.environ.get("AWS_S3_BUCKET") # 💡 Aquí se carga
+    app.config['AWS_REGION'] = os.environ.get("AWS_REGION", 'us-east-1') 
+    app.config['S3_UPLOAD_FOLDER'] = os.environ.get("S3_UPLOAD_FOLDER", "books")
 
     # Configuración de base de datos
     DB_URL = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'site.db')
