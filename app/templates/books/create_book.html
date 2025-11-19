@@ -1,72 +1,80 @@
+<link rel="stylesheet" href="/static/style.css">
+
 {% block content %}
-<div class="container py-4">
-  <div class="card shadow-sm border-0">
-    <div class="card-body">
-      <h4 class="mb-3">Publicar libro</h4>
+<body class="book-form-body"> 
+  
+  <div class="book-form-container">
+    <div class="book-form-card">
+      <div class="book-form-header">
+        <h4>Publicar libro</h4>
+      </div>
+      
       <form method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
-
-        <div class="mb-3">
+        
+        <div class="form-group">
           {{ form.title.label(class="form-label") }}
-          {{ form.title(class="form-control") }}
+          {{ form.title(class="form-control", placeholder="Ingrese el título del libro") }}
         </div>
-
-        <div class="row">
-          <div class="col-md-6 mb-3">
+        
+        <div class="form-row">
+          <div class="form-group">
             {{ form.price.label(class="form-label") }}
-            {{ form.price(class="form-control") }}
+            {{ form.price(class="form-control", placeholder="0.00") }}
           </div>
-          <div class="col-md-6 mb-3">
+          <div class="form-group">
             {{ form.quantity.label(class="form-label") }}
-            {{ form.quantity(class="form-control") }}
+            {{ form.quantity(class="form-control", placeholder="0") }}
           </div>
         </div>
-
-        <div class="mb-3">
+        
+        <div class="form-group">
           {{ form.release_date.label(class="form-label") }}
           {{ form.release_date(class="form-control") }}
         </div>
-
-        <div class="mb-3">
+        
+        <div class="form-group">
           {{ form.format.label(class="form-label") }}
           {{ form.format(class="form-control") }}
         </div>
-
-        <div class="mb-3">
+        
+        <div class="form-group">
           {{ form.editorial.label(class="form-label") }}
-          {{ form.editorial(class="form-control") }}
+          {{ form.editorial(class="form-control", placeholder="Nombre de la editorial") }}
         </div>
-
-        <div class="mb-3">
+        
+        <div class="form-group">
           {{ form.author_name.label(class="form-label") }}
-          {{ form.author_name(class="form-control") }}
+          {{ form.author_name(class="form-control", placeholder="Nombre del autor") }}
         </div>
-
-        <div class="mb-3">
+        
+        <div class="form-group">
           {{ form.synopsis.label(class="form-label") }}
-          {{ form.synopsis(class="form-control", rows="4") }}
+          {{ form.synopsis(class="form-control", rows="5", placeholder="Escriba una breve sinopsis del libro...") }}
         </div>
-
-        <div class="mb-3">
+        
+        <div class="form-group">
           <label class="form-label">Géneros</label>
           <select name="genres" multiple class="form-select">
             {% for id, name in form.genres.choices %}
-              <option value="{{ id }}">{{ name }}</option>
+            <option value="{{ id }}">{{ name }}</option>
             {% endfor %}
           </select>
+          <span class="form-text">Mantén presionado Ctrl (Cmd en Mac) para seleccionar múltiples géneros</span>
         </div>
-
-        <div class="mb-3">
-          {{ form.image.label(class="form-label") }}
-          <input type="file" name="image" class="form-control" accept="image/*" required>
-        </div>
-
-        <div class="d-flex gap-2">
-          <button class="btn btn-primary">{{ form.submit.label.text }}</button>
-          <a href="{{ url_for('books.list_books') }}" class="btn btn-outline-secondary">Cancelar</a>
-        </div>
-      </form>
-    </div>
+        
+        <div class="form-group">
+        {{ form.image.label(class="form-label") }}
+        <input type="file" name="image" class="form-control" accept="image/*" required>
+        <span class="form-text">Formatos aceptados: JPG, PNG, WEBP. Tamaño máximo: 5MB</span>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ form.submit.label.text }}</button>
+        <a href="{{ url_for('books.list_books') }}" class="btn btn-outline-secondary">Cancelar</a>
+      </div>
+    </form>
   </div>
 </div>
+</body>
 {% endblock %}

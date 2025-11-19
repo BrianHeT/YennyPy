@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/search-results.css">
+    <title>Resultados de búsqueda - Yenny</title>
+</head>
+
+<body>
+    {% include 'components/nav.html' %}
+
+    <main class="search-results-container">
+        <div class="search-header">
+            <h1>Resultados de búsqueda</h1>
+            <p class="search-query">Mostrando resultados para: <strong>"{{ query }}"</strong></p>
+            <p class="results-count">{{ books|length }} libro(s) encontrado(s)</p>
+        </div>
+
+        {% if books %}
+        <div class="books-grid">
+            {% for book in books %}
+            <article class="book-card">
+                <div class="book-image-container">
+                    {% if book.cover_image %}
+                    <img src="{{ book.cover_image }}" alt="{{ book.title }}" class="book-cover">
+                    {% else %}
+                    <div class="book-cover-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="book-info">
+                    <h2 class="book-title">{{ book.title }}</h2>
+                    <p class="book-author">{{ book.author }}</p>
+                    
+                    {% if book.description %}
+                    <p class="book-description">{{ book.description[:150] }}{% if book.description|length > 150 %}...{% endif %}</p>
+                    {% endif %}
+                    
+                    <div class="book-meta">
+                        {% if book.genre %}
+                        <span class="book-genre">{{ book.genre }}</span>
+                        {% endif %}
+                        {% if book.year %}
+                        <span class="book-year">{{ book.year }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="book-footer">
+                        <span class="book-price">${{ "%.2f"|format(book.price) }}</span>
+                        <div class="book-actions">
+                            <a href="{{ url_for('books.details', book_id=book.id) }}" class="btn-detail">Ver detalles</a>
+                            <form action="{{ url_for('carrito.cart', book_id=book.id) }}" method="POST" class="add-cart-form">
+                                <button type="submit" class="btn-add-cart">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="9" cy="21" r="1"></circle>
+                                        <circle cx="20" cy="21" r="1"></circle>
+                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                    </svg>
+                                    Añadir
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-results">
+            <svg class="no-results-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <h2>No se encontraron resultados</h2>
+            <p>Intenta con otros términos de búsqueda o explora nuestra biblioteca completa.</p>
+            <a href="{{ url_for('books.list_books') }}" class="btn-explore">Explorar biblioteca</a>
+        </div>
+        {% endif %}
+    </main>
+
+    <footer class="search-footer">
+        <p>&copy; 2025 Yenny. Todos los derechos reservados.</p>
+    </footer>
+</body>
+
+</html>
