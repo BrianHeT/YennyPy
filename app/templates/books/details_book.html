@@ -2,61 +2,91 @@
 {% block title %}Detalle del libro {{ book.title }}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/book-detail.css') }}">
 
-    <h1 class="mb-3">{{ book.title }}</h1>
+<div class="book-detail-container">
+    
+    <div class="book-detail-card">
+        <div class="book-detail-header">
+            <h1 class="book-detail-title">{{ book.title }}</h1>
+        </div>
 
-    <td class="px-6 py-4 whitespace-nowrap">
-    {% if book.image %}
-        {% set image_src = book.image %}
-        
-        {% if not image_src.startswith('http') %} 
-            {% set image_src = s3_config.BASE_URL ~ book.image %}
-        {% endif %}
+        <div class="book-detail-content">
+            <!-- Image Section -->
+            <div class="book-image-section">
+                <div class="book-image-wrapper">
+                    {% if book.image %}
+                        {% set image_src = book.image %}
+                        
+                        {% if not image_src.startswith('http') %} 
+                            {% set image_src = s3_config.BASE_URL ~ book.image %}
+                        {% endif %}
 
-        <img src="{{ image_src }}" alt="{{ book.title }}" class="h-16 w-12 object-cover rounded-md shadow-sm">
-    {% else %}
-    {% endif %}
-</td>
+                        <img src="{{ image_src }}" alt="{{ book.title }}" class="book-image">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/placeholder-book.png') }}" alt="Sin imagen" class="book-image">
+                    {% endif %}
+                </div>
+            </div>
 
-    <dl class="row">
-        <dt class="col-sm-3">Precio:</dt>
-        <dd class="col-sm-9">${{ book.price }}</dd>
+            <!-- Info Section -->
+            <div class="book-info-section">
+                <dl class="book-info-list">
+                    <div class="book-info-item">
+                        <dt class="book-info-label">Precio:</dt>
+                        <dd class="book-info-value book-price">${{ book.price }}</dd>
+                    </div>
 
-        <dt class="col-sm-3">Fecha de publicación:</dt>
-        <dd class="col-sm-9">
-            {% if book.release_date %}
-                {{ book.release_date.strftime("%d/%m/%Y") }}
-            {% else %}
-                Sin fecha
-            {% endif %}
-        </dd>
+                    <div class="book-info-item">
+                        <dt class="book-info-label">Fecha de publicación:</dt>
+                        <dd class="book-info-value">
+                            {% if book.release_date %}
+                                {{ book.release_date.strftime("%d/%m/%Y") }}
+                            {% else %}
+                                <span class="no-data-text">Sin fecha</span>
+                            {% endif %}
+                        </dd>
+                    </div>
 
-        <dt class="col-sm-3">Formato:</dt>
-        <dd class="col-sm-9">{{ book.format or "No especificado" }}</dd>
+                    <div class="book-info-item">
+                        <dt class="book-info-label">Formato:</dt>
+                        <dd class="book-info-value">{{ book.format or "No especificado" }}</dd>
+                    </div>
 
-        <dt class="col-sm-3">Editorial:</dt>
-        <dd class="col-sm-9">{{ book.editorial or "No especificada" }}</dd>
+                    <div class="book-info-item">
+                        <dt class="book-info-label">Editorial:</dt>
+                        <dd class="book-info-value">{{ book.editorial or "No especificada" }}</dd>
+                    </div>
 
-        <dt class="col-sm-3">Autor:</dt>
-        <dd class="col-sm-9">{{ book.author_name }}</dd>
+                    <div class="book-info-item">
+                        <dt class="book-info-label">Autor:</dt>
+                        <dd class="book-info-value">{{ book.author_name }}</dd>
+                    </div>
 
-        <dt class="col-sm-3">Géneros:</dt>
-        <dd class="col-sm-9">
-            {% if book.genres %}
-                {% for g in book.genres %}
-                    <span class="badge bg-secondary me-1">{{ g.name }}</span>
-                {% endfor %}
-            {% else %}
-                Sin géneros
-            {% endif %}
-        </dd>
-    </dl>
+                    <div class="book-info-item">
+                        <dt class="book-info-label">Géneros:</dt>
+                        <dd class="book-info-value">
+                            {% if book.genres %}
+                                <div class="book-genres">
+                                    {% for g in book.genres %}
+                                        <span class="genre-badge">{{ g.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <span class="no-data-text">Sin géneros</span>
+                            {% endif %}
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
 
-    <hr class="mb-4">
-
-    <h2 class="mb-3">Sinopsis</h2>
-    <p>{{ book.synopsis or "Sin sinopsis disponible." }}</p>
+    <!-- Synopsis Section -->
+    <div class="book-synopsis-section">
+        <h2 class="synopsis-title">Sinopsis</h2>
+        <p class="synopsis-text">{{ book.synopsis or "Sin sinopsis disponible." }}</p>
+    </div>
 
 </div>
 {% endblock %}
