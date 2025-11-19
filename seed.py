@@ -135,4 +135,30 @@ with app.app_context():
     else:
         print(f"Usuario Administrador ya existe.")
 
+
+# Sembrar Usuario Normal
+print(f"\nVerificando y creando usuario normal: usuario@correo.com...")
+
+normal_exists = User.query.filter_by(email='usuario@correo.com').first()
+
+if not normal_exists:
+    hashed_password = bcrypt.generate_password_hash('usuario123').decode('utf-8')
+
+    normal_user = User(
+        name='Usuario',
+        email='usuario@correo.com',
+        password_hash=hashed_password,
+        is_admin=False,
+        email_verified_at=datetime.utcnow()  # opcional, si querés marcarlo como verificado
+    )
+
+    database.session.add(normal_user)
+    database.session.commit()
+
+    print("Usuario normal creado:")
+    print("   Email: usuario@correo.com")
+    print("   Contraseña: usuario123")
+else:
+    print("Usuario normal ya existe.")
+    
     print("\n--- Proceso de siembra finalizado. ---")
