@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Denegado - YennyPy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-content">
+            <h1 class="error-code">403</h1>
+            <h2 class="error-title">🚫 Acceso Denegado</h2>
+            <p class="error-message">No tienes permisos para acceder a esta página.</p>
+            <p class="error-description">Esta área está restringida solo para administradores.</p>
+            <div class="error-actions">
+                <a href="{{ url_for('main.index') }}" class="btn btn-primary">Volver al Inicio</a>
+                <a href="{{ url_for('books.list_books') }}" class="btn btn-secondary">Ver Libros</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

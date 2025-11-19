@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app.models import User, Book, Author, Genre, database  as db
+from app.utils.decorators import admin_required
 # ⚠️ Asegúrate de importar tu formulario (ej: from .forms import BookForm)
 # from .forms import BookForm 
 
@@ -19,7 +20,7 @@ def check_admin_access():
 # 1. RUTA READ/DASHBOARD (Listado principal de libros y usuarios)
 # La ruta final será: /admin/
 @bp_admin.route('/')
-@login_required
+@admin_required
 def admin_panel():
     if check_admin_access():
         return check_admin_access()
