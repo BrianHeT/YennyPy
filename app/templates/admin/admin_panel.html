@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Panel de Administración</title>
+    {# Vinculando el CSS usando url_for de Flask #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <h1>Panel de Administración</h1>
+<body class="admin-body">
+    <h1 class="admin-h1">Panel de Administración</h1>
 
     <aside class="admin-sidebar">
         <nav>
@@ -78,7 +80,6 @@
                         </td>
                     </tr>
                     {% endfor %}
-                    {# {% else %} <tr><td colspan="6">No hay libros registrados.</td></tr> {% endif %} #}
                 </tbody>
             </table>
         </section>
@@ -137,5 +138,36 @@
         </section>
 
     </main>
+
+    {# Añadiendo JavaScript para navegación de tabs #}
+    <script>
+        // JavaScript para el cambio de pestañas del sidebar
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarLinks = document.querySelectorAll('.sidebar-link[href^="#"]');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remover clase active de todos los enlaces
+                    sidebarLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Agregar clase active al enlace clickeado
+                    this.classList.add('active');
+                    
+                    // Ocultar todos los contenidos de tabs
+                    tabContents.forEach(tab => tab.classList.remove('active'));
+                    
+                    // Mostrar el tab correspondiente
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetTab = document.getElementById(targetId);
+                    if (targetTab) {
+                        targetTab.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

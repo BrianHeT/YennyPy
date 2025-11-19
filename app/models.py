@@ -95,3 +95,4 @@ class CartItem(database.Model):
 
     def __repr__(self):
         return f'<CartItem User:{self.user_id} Book:{self.book_id}>'
+    

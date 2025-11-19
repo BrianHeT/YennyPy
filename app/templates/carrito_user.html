@@ -1,107 +1,97 @@
+
+{% block title %}Mi Carrito - Librería{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
 {% block content %}
-<div class="container py-8 mx-auto max-w-6xl">
-    <h2 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-2">🛒 Mi Carrito de Compras</h2>
+<div class="container">
+    <h2 class="cart-title">🛒 Mi Carrito de Compras</h2>
 
     {% if cart_items|length == 0 %}
-        <div class="text-center py-12 bg-gray-50 rounded-lg shadow-md">
-            <p class="text-xl text-muted mb-4">No tienes libros en el carrito.</p>
-            <a href="{{ url_for('books.biblioteca') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
-                Ver Libros
-            </a>
+        <div class="empty-cart">
+            <p>No tienes libros en el carrito.</p>
+            <a href="{{ url_for('books.biblioteca') }}">Ver Libros</a>
         </div>
     {% else %}
-        <div class="table-responsive bg-white rounded-lg shadow-xl overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-indigo-50">
+        <div class="table-responsive">
+            <table>
+                <thead>
                     <tr>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-indigo-700 uppercase tracking-wider">Portada</th>
-                        <th class="px-6 py-3 text-left text-sm font-medium text-indigo-700 uppercase tracking-wider">Título / Autor</th>
-                        <th class="px-6 py-3 text-center text-sm font-medium text-indigo-700 uppercase tracking-wider" style="width: 15%;">Cantidad</th>
-                        <th class="px-6 py-3 text-right text-sm font-medium text-indigo-700 uppercase tracking-wider">Precio Unitario</th>
-                        <th class="px-6 py-3 text-right text-sm font-medium text-indigo-700 uppercase tracking-wider">Total Ítem</th>
-                        <th class="px-6 py-3 text-center text-sm font-medium text-indigo-700 uppercase tracking-wider">Acciones</th>
+                        <th>Portada</th>
+                        <th>Título / Autor</th>
+                        <th class="text-center" style="width: 15%;">Cantidad</th>
+                        <th class="text-right">Precio Unitario</th>
+                        <th class="text-right">Total Ítem</th>
+                        <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in cart_items %}
-                        <tr class="hover:bg-gray-50 transition duration-150">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <a href="{{ url_for('books.details', book_id=item.book.id) }}">
-                                    <!-- Reconstrucción de la URL de S3 o uso de URL estática -->
+                        <tr>
+                            <td>
+                                <a href="{{ url_for('books.details', book_id=item.book.id) }}" class="book-cover-link">
                                     {% set image_src = item.book.image %}
                                     {% if image_src and not image_src.startswith('http') %}
-                                        {# Si el libro no tiene una URL completa, usamos la base de S3 (asumiendo que se pasa s3_config) #}
                                         {% set image_src = s3_config.BASE_URL ~ item.book.image %}
                                     {% endif %}
                                     
                                     <img src="{{ image_src or url_for('static', filename='images/default-book.png') }}" 
-                                         alt="{{ item.book.title }}" 
-                                         class="h-16 w-12 object-cover rounded shadow-md">
+                                         alt="{{ item.book.title }}">
                                 </a>
                             </td>
-                            <td class="px-6 py-4">
-                                <strong class="text-gray-900">{{ item.book.title }}</strong><br>
-                                <small class="text-gray-500">
-                                    Por: {{ item.book.author_name if item.book.author_name else 'Autor desconocido' }}
-                                </small>
+                            <td class="book-info">
+                                <strong>{{ item.book.title }}</strong>
+                                <small>Por: {{ item.book.author_name if item.book.author_name else 'Autor desconocido' }}</small>
                             </td>
                             
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                <!-- Formulario para ACTUALIZAR CANTIDAD -->
-                                <form action="{{ url_for('carrito.cart_update', item_id=item.id) }}" method="POST" class="flex justify-center items-center space-x-2">
+                            <td>
+                                <form action="{{ url_for('carrito.cart_update', item_id=item.id) }}" method="POST" class="quantity-form">
                                     <input type="number" 
                                            name="cantidad" 
                                            value="{{ item.cantidad }}" 
                                            min="1" 
                                            max="{{ item.book.quantity }}" 
-                                           class="w-16 border-gray-300 rounded-lg text-center p-1 text-sm">
-                                    <button type="submit" title="Actualizar Cantidad" class="bg-gray-300 hover:bg-gray-400 text-gray-800 p-1 rounded-full transition duration-150">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                           class="quantity-input">
+                                    <button type="submit" title="Actualizar Cantidad" class="update-btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.207 19l1.41-1.41a6 6 0 1111.414-11.414l1.414 1.414z" />
                                         </svg>
                                     </button>
                                 </form>
-                                <small class="text-xs text-gray-500 mt-1 block">
-                                    Disponibles: {{ item.book.quantity }}
-                                </small>
+                                <small class="stock-info">Disponibles: {{ item.book.quantity }}</small>
                             </td>
                             
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-gray-700">
+                            <td class="price-column">
                                 ${{ "{:.2f}".format(item.book.price) }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right font-bold text-gray-900">
+                            <td class="total-column">
                                 ${{ "{:.2f}".format(item.cantidad * item.book.price) }}
                             </td>
                             
-                            <td class="px-6 py-4 whitespace-nowrap text-center">
-                                <!-- Formulario para ELIMINAR del carrito -->
-                                <form action="{{ url_for('carrito.cart_remove_item', item_id=item.id) }}" method="POST" class="inline" 
+                            <td class="text-center">
+                                <form action="{{ url_for('carrito.cart_remove_item', item_id=item.id) }}" method="POST" style="display: inline;" 
                                       onsubmit="return confirm('¿Estás seguro de eliminar este libro del carrito?')">
-                                    <button class="bg-red-500 hover:bg-red-600 text-white font-medium py-1 px-3 rounded-lg text-sm transition duration-150">
-                                        Eliminar
-                                    </button>
+                                    <button class="remove-btn">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
                 <tfoot>
-                    <tr class="bg-indigo-100">
-                        <th colspan="4" class="text-right px-6 py-3 text-lg font-bold text-indigo-800">Total del Carrito:</th>
-                        <th class="text-right px-6 py-3 text-xl font-extrabold text-indigo-900">${{ "{:.2f}".format(total_price) }}</th>
+                    <tr>
+                        <th colspan="4" class="total-label">Total del Carrito:</th>
+                        <th class="total-amount">${{ "{:.2f}".format(total_price) }}</th>
                         <th></th>
                     </tr>
                 </tfoot>
             </table>
         </div>
 
-        <div class="text-end mt-6 space-x-3">
-            <a href="{{ url_for('books.list_books') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition duration-300">
-                Seguir Comprando
-            </a>
-            <button class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transition duration-300" onclick="alert('Funcionalidad de compra próximamente')">
-                Proceder al Pago
-            </button>
+        <div class="action-buttons">
+            <a href="{{ url_for('books.list_books') }}" class="btn-secondary">Seguir Comprando</a>
+            <button class="btn-checkout" onclick="alert('Funcionalidad de compra próximamente')">Proceder al Pago</button>
         </div>
     {% endif %}
 </div>

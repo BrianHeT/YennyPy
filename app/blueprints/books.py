@@ -155,3 +155,26 @@ def delete_book(book_id):
         return redirect(url_for("books.biblioteca"))
 
     return render_template("books/delete_book.html", book=book)
+
+@bp_books.route('/books/search')
+def search_books():
+    query = request.args.get('q', '').strip()
+    
+    if not query:
+        return redirect(url_for('books.list_books'))
+
+    books = Book.query.filter(Book.title.ilike(f'%{query}%')).all()
+    
+    books_with_images = []
+    for book in books:
+        image_url = generate_presigned_url_for_key(book.image) if book.image else None
+        books_with_images.append({
+            "id": book.id,
+            "title": book.title,
+            "author": book.author_name,
+            "description": book.synopsis,
+            "price": book.price,
+            "cover_image": image_url
+        })
+
+    return render_template('search_results.html', query=query, books=books_with_images)
