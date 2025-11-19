@@ -3,8 +3,8 @@ from flask_login import login_required, current_user
 from app.extensions import database
 from app.models import Book, Genre, Author
 from app.bookforms import BookForm
-from app.utils.s3 import upload_fileobj_to_s3, generate_presigned_url_for_key, delete_s3_key
-from app.utils.decorators import admin_required  # as we discussed
+from app.utils.s3 import upload_fileobj_to_s3, generate_presigned_url_for_key, delete_s3_key, get_s3_client 
+from app.utils.decorators import admin_required 
 from werkzeug.utils import secure_filename
 
 bp_books = Blueprint("books", __name__, url_prefix="/books")
@@ -13,7 +13,13 @@ bp_books = Blueprint("books", __name__, url_prefix="/books")
 @bp_books.route("/biblioteca")
 def list_books():
     books = Book.query.all()
-    return render_template("books/biblioteca.html", books=books)
+    
+    books_with_images = [
+        (book, book.image)
+        for book in books
+    ]
+    
+    return render_template("books/biblioteca.html", books=books_with_images)
 
 # ---- DETALLE PÚBLICO ----
 @bp_books.route("/<int:book_id>")
@@ -38,25 +44,28 @@ def create_book():
     form = BookForm()
     form.genres.choices = [(g.id, g.name) for g in Genre.query.order_by(Genre.name).all()]
 
-    if request.method == "POST":
-        # imagen obligatoria
-        if 'image' not in request.files or request.files['image'].filename == '':
-            flash("La imagen de portada es obligatoria.", "danger")
-            return render_template("books/create_book.html", form=form)
-
     if form.validate_on_submit():
+        # Validar que se subió una imagen
         f = request.files.get("image")
         if not f or f.filename == "":
             flash("La imagen de portada es obligatoria.", "danger")
             return render_template("books/create_book.html", form=form)
+        
+        # Subir imagen a S3
         filename = secure_filename(f.filename)
         try:
-            key = upload_fileobj_to_s3(f, filename)
+            s3_url = upload_fileobj_to_s3(f, filename)  # Retorna URL completa
+    
+            if not s3_url:
+                flash("Error al subir la imagen a S3. Intentá nuevamente.", "danger")
+                return render_template("books/create_book.html", form=form)
+        
         except Exception as e:
             current_app.logger.error("S3 upload failed: %s", e)
             flash("Error al subir la imagen. Intentá nuevamente.", "danger")
             return render_template("books/create_book.html", form=form)
 
+        # Crear el libro
         book = Book(
             title=form.title.data,
             price=float(form.price.data),
@@ -65,16 +74,19 @@ def create_book():
             format=form.format.data,
             editorial=form.editorial.data,
             synopsis=form.synopsis.data,
-            image=key,
+            image=s3_url,
             author_name=form.author_name.data
         )
+        
+        # Agregar géneros si fueron seleccionados
         if form.genres.data:
             book.genres = Genre.query.filter(Genre.id.in_(form.genres.data)).all()
 
         database.session.add(book)
         database.session.commit()
+        
         flash("Libro creado correctamente.", "success")
-        return redirect(url_for("books.create_book"))
+        return redirect(url_for("books.list_books"))  
 
     return render_template("books/create_book.html", form=form)
 
