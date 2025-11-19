@@ -7,18 +7,6 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <!-- Mensajes Flash -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" onclick="this.parentElement.style.display='none'">×</button>
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
     <div class="top-bar">
         <button class="back-btn" onclick="window.history.back()">Volver</button>
         <div class="logo-container">
@@ -70,7 +58,7 @@
                 <p>--- O ---</p>
                 <a href="{{ url_for('auth.login_google') }}" class="google-login-btn">
                     <img src="https://www.googleapis.com/favicon.ico" alt="Google" class="google-icon" />
-                    <span>LOGIN WITH GOOGLE</span>
+                    <span>CONTINUAR CON GOOGLE</span>
                 </a>
             </div>
         </div>

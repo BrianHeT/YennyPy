@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error del Servidor - YennyPy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-content">
+            <h1 class="error-code">500</h1>
+            <h2 class="error-title">💥 Error del Servidor</h2>
+            <p class="error-message">Algo salió mal en nuestro servidor.</p>
+            <p class="error-description">Nuestro equipo ha sido notificado y está trabajando en solucionarlo.</p>
+            <div class="error-actions">
+                <a href="{{ url_for('main.index') }}" class="btn btn-primary">Volver al Inicio</a>
+                <button onclick="location.reload()" class="btn btn-secondary">Reintentar</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

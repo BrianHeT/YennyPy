@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página no encontrada - YennyPy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-content">
+            <h1 class="error-code">404</h1>
+            <h2 class="error-title">📚 Página no encontrada</h2>
+            <p class="error-message">La página que buscas no existe o fue movida.</p>
+            <div class="error-actions">
+                <a href="{{ url_for('main.index') }}" class="btn btn-primary">Volver al Inicio</a>
+                <a href="{{ url_for('books.list_books') }}" class="btn btn-secondary">Ver Libros</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

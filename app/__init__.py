@@ -1,11 +1,11 @@
 import os
-from flask import Flask
+from flask import Flask, render_template, flash, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from app.extensions import database, bcrypt
-
+from .models import User
 
 # --- Instancias de extensiones (sin app todavía) ---
 login_manager = LoginManager()
@@ -57,11 +57,34 @@ def create_app():
     migrate.init_app(app, database)
 
     # Configurar login
-    login_manager.login_view = 'main.login'  
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.auth'
+    login_manager.login_message = 'Por favor inicia sesión para continuar.'
     login_manager.login_message_category = 'info'
-
-    # Importar modelos
-    from .models import User
+    
+    # Error handlers personalizados
+    @app.errorhandler(401)
+    def unauthorized(error):
+        """Usuario no autenticado intenta acceder a ruta protegida"""
+        flash('Necesitas iniciar sesión para acceder a esta página.', 'warning')
+        return redirect(url_for('auth.auth', next=request.url))
+    
+    @app.errorhandler(403)
+    def forbidden(error):
+        """Usuario autenticado pero sin permisos suficientes"""
+        flash('No tienes permisos para acceder a esta página.', 'danger')
+        return render_template('errors/403.html'), 403
+    
+    @app.errorhandler(404)
+    def not_found(error):
+        """Página no encontrada"""
+        return render_template('errors/404.html'), 404
+    
+    @app.errorhandler(500)
+    def internal_error(error):
+        """Error interno del servidor"""
+        database.session.rollback()
+        return render_template('errors/500.html'), 500
 
     # Cargar usuario para Flask-Login
     @login_manager.user_loader

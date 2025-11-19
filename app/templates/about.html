@@ -3,13 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <title>Sobre nosotros</title>
 </head>
-<body>
+<body class="about-page">
     
-<h1>Prueba de git</h1>
-<p>Para probar el git</p>
+<h1 class="about-h1">Sobre nosotros</h1>
+<section class="about-container">
+        <div class="about-text">
+            <h2>Bienvenidos a Yenny</h2>
+            <p>En <strong>Yenny</strong> creemos que los libros tienen el poder de transformar vidas. Desde nuestros inicios, nos propusimos ser más que una librería: queríamos construir un espacio donde lectores de todas las edades y gustos pudieran encontrar inspiración, conocimiento y compañía en cada página.</p>
 
-<a href="{{ url_for('main.index')}}"> Ir al index</a>
+            <h3>Nuestra Historia</h3>
+            <p>Fundada por amantes de la literatura, Yenny nació con la misión de acercar los mejores títulos nacionales e internacionales a cada rincón del país. Con el tiempo, evolucionamos hacia una plataforma digital que combina la calidez de una librería tradicional con la comodidad de la tecnología.</p>
+
+            <h3>¿Qué ofrecemos?</h3>
+            <ul>
+                <li>Un catálogo curado con miles de títulos en literatura, ciencia, arte, educación y más.</li>
+                <li>Envíos rápidos y seguros a todo el país.</li>
+                <li>Atención personalizada y soporte para ayudarte a encontrar tu próxima lectura favorita.</li>
+                <li>Espacios para autores independientes que desean publicar y compartir sus obras.</li>
+            </ul>
+
+            <h3>Nuestro compromiso</h3>
+            <p>En Yenny, cada libro cuenta una historia, y cada lector es parte de la nuestra. Trabajamos día a día para fomentar la lectura, apoyar a escritores emergentes y ofrecer una experiencia de compra cálida, segura y significativa.</p>
+
+            <p>Gracias por ser parte de nuestra comunidad lectora. ¡Seguimos escribiendo esta historia juntos!</p>
+        </div>
+    </section>
+
+<a href="{{ url_for('main.index')}}" class="about-a"> Ir al index</a>
 </body>
 </html>
