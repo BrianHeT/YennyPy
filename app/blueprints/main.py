@@ -10,3 +10,7 @@ def index():
 @bp_main.route("/about")
 def about():
     return render_template('about.html', title='Acerca de')
+
+@bp_main.route("/soporte")
+def soporte():
+    return render_template('soporte.html', title='Soporte')
