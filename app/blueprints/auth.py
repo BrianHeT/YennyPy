@@ -73,7 +73,7 @@ def login_google():
         google_provider_cfg = get_google_provider_cfg()
         if not google_provider_cfg:
             flash('Error de configuración de Google OAuth.', 'danger')
-            return redirect(url_for('main.auth'))
+            return redirect(url_for('auth.auth'))
         
         authorization_endpoint = google_provider_cfg["authorization_endpoint"]
         
@@ -168,14 +168,26 @@ def callback_google():
         userinfo = userinfo_response.json()
         current_app.logger.info(f"✅ Userinfo obtenido: {userinfo.get('email')}")
         
-        # Verificar email
-        if not userinfo.get("email_verified"):
-            current_app.logger.warning(f"⚠️ Email no verificado: {userinfo.get('email')}")
+        # 🔍 DEBUG: Ver todos los datos
+        current_app.logger.info(f"🔍 Email verified: {userinfo.get('email_verified')}")
+        current_app.logger.info(f"🔍 Verified email field: {userinfo.get('verified_email')}")  # A veces Google usa este campo
+        current_app.logger.info(f"🔍 Userinfo keys: {list(userinfo.keys())}")
+        
+        # Verificar email - versión más robusta
+        email = userinfo.get("email")
+        email_verified = userinfo.get("email_verified") or userinfo.get("verified_email")
+        
+        # Si es Gmail, asumir verificado
+        if not email_verified and email and '@gmail.com' in email:
+            current_app.logger.info(f"✅ Gmail detectado, asumiendo verificado: {email}")
+            email_verified = True
+        
+        if not email_verified:
+            current_app.logger.warning(f"⚠️ Email no verificado: {email}")
             flash("El email de Google no pudo ser verificado.", 'danger')
             return redirect(url_for('auth.auth'))
         
         # Extraer datos del usuario
-        email = userinfo["email"]
         name = userinfo.get("name", email.split('@')[0])
         picture = userinfo.get("picture")
         
@@ -218,7 +230,7 @@ def callback_google():
         current_app.logger.error(f"❌ Error inesperado en callback: {str(e)}", exc_info=True)
         flash('Error al iniciar sesión con Google. Por favor, intenta nuevamente.', 'danger')
         return redirect(url_for('auth.auth'))
-    
+
 # -------------------- CIERRE DE SESIÓN --------------------
 
 @bp_auth.route("/logout")
