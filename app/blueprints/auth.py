@@ -95,7 +95,7 @@ def login_google():
     except Exception as e:
         current_app.logger.error(f"❌ Error en login_google: {str(e)}", exc_info=True)
         flash('Error al iniciar el proceso de login con Google.', 'danger')
-        return redirect(url_for('main.auth'))
+        return redirect(url_for('auth.auth'))
 
 
 @bp_auth.route("/callback/google")
@@ -106,7 +106,7 @@ def callback_google():
         if not code:
             current_app.logger.error("❌ No se recibió código de Google")
             flash('Error: No se recibió código de autorización.', 'danger')
-            return redirect(url_for('main.auth'))
+            return redirect(url_for('auth.auth'))
         
         current_app.logger.info(f"✅ Código recibido: {code[:20]}...")
         
@@ -115,8 +115,8 @@ def callback_google():
         if not google_provider_cfg:
             current_app.logger.error("❌ No se pudo obtener configuración de Google")
             flash('Error de configuración de Google.', 'danger')
-            return redirect(url_for('main.auth'))
-        
+            return redirect(url_for('auth.auth'))
+
         token_endpoint = google_provider_cfg["token_endpoint"]
         
         client = WebApplicationClient(current_app.config['GOOGLE_CLIENT_ID'])
@@ -148,7 +148,7 @@ def callback_google():
         if not token_response.ok:
             current_app.logger.error(f"❌ Error obteniendo token: {token_response.status_code} - {token_response.text}")
             flash('Error al obtener token de Google.', 'danger')
-            return redirect(url_for('main.auth'))
+            return redirect(url_for('auth.auth'))
         
         current_app.logger.info(f"✅ Token obtenido exitosamente")
         
@@ -163,8 +163,8 @@ def callback_google():
         if not userinfo_response.ok:
             current_app.logger.error(f"❌ Error obteniendo info de usuario: {userinfo_response.status_code}")
             flash('Error al obtener información del usuario.', 'danger')
-            return redirect(url_for('main.auth'))
-        
+            return redirect(url_for('auth.auth'))
+
         userinfo = userinfo_response.json()
         current_app.logger.info(f"✅ Userinfo obtenido: {userinfo.get('email')}")
         
@@ -172,7 +172,7 @@ def callback_google():
         if not userinfo.get("email_verified"):
             current_app.logger.warning(f"⚠️ Email no verificado: {userinfo.get('email')}")
             flash("El email de Google no pudo ser verificado.", 'danger')
-            return redirect(url_for('main.auth'))
+            return redirect(url_for('auth.auth'))
         
         # Extraer datos del usuario
         email = userinfo["email"]
