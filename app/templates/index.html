@@ -1,90 +1,82 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yenny - Librería</title>
 
 </head>
+
 <body class="body-index">
     <!-- Include Header -->
     {% include 'components/nav.html' %}
 
     <!-- Hero Section -->
-<div class="hero-section">
-    <img src="https://yennypy-images.s3.us-east-2.amazonaws.com/biblioteca.jpg" alt="Biblioteca" class="hero-image">
-</div>
+    <div class="hero-section">
+        <img src="https://yennypy-images.s3.us-east-2.amazonaws.com/biblioteca.jpg" alt="Biblioteca" class="hero-image">
+    </div>
 
     <!-- Main Container -->
     <div class="main-container">
-    <!-- Left Content (Libros) -->
-    <div class="content-left">
-        <!-- Más Vendidos Section -->
-        <div class="books-section">
-            <h2 class="section-title">Más vendidos:</h2>
-            <div class="books-grid">
-                
-                {% for book in mas_vendidos %}
-                    {% set image_src = book.image %}
-                    {% if image_src and not image_src.startswith('http') %}
-                        {% set image_src = s3_config.BASE_URL ~ book.image %}
-                    {% endif %}
-                    
-                    <div class="book-card">
-                        <div class="book-image">
-                            <a href="{{ url_for('main.book_detail', book_id=book.id) }}">
-                                <img class="book-cover" src="{{ image_src or url_for('static', filename='images/default-book.png') }}" alt="{{ book.title }}">
-                            </a>
-                        </div>
-                        <div class="book-info">
-                            <div class="book-name">{{ book.title }}</div>
-                            <div class="book-price">${{ "{:.2f}".format(book.price) }}</div>
-                            <div class="book-actions">
-                                <form method="POST" action="{{ url_for('main.cart_add_item', book_id=book.id) }}" class="inline-block">
-                                    <button type="submit" class="buy-button">Comprar</button>
-                                </form>
-                                <span class="star-icon">⭐</span>
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    <p>No hay libros marcados como más vendidos.</p>
-                {% endfor %}
-            </div>
-        </div>
+        <!-- Left Content (Libros) -->
+        <div class="content-left">
+            <!-- Más Vendidos Section -->
+            <div class="books-section">
+                <h2 class="section-title">Más vendidos:</h2>
+                <div class="books-grid">
 
-        <!-- Recomendados Section -->
-        <div class="books-section">
-            <h2 class="section-title">Recomendados:</h2>
-            <div class="books-grid">
-                
-                {% for book in recomendados %}
+                    {% for book in mas_vendidos %}
                     {% set image_src = book.image %}
                     {% if image_src and not image_src.startswith('http') %}
-                        {% set image_src = s3_config.BASE_URL ~ book.image %}
+                    {% set image_src = s3_config.BASE_URL ~ book.image %}
                     {% endif %}
-                    
-                    <div class="book-card">
-                        <div class="book-image">
-                            <a href="{{ url_for('main.book_detail', book_id=book.id) }}">
-                                <img class="book-cover" src="{{ image_src or url_for('static', filename='images/default-book.png') }}" alt="{{ book.title }}">
-                            </a>
-                        </div>
-                        <div class="book-info">
-                            <div class="book-name">{{ book.title }}</div>
-                            <div class="book-price">${{ "{:.2f}".format(book.price) }}</div>
-                            <div class="book-actions">
-                                <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="buy-button view-button">Ver</a>
-                                <span class="star-icon">⭐</span>
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
+
+                    <article class="book-card">
+                        <img src="{{ image_src }}" alt="{{ book.title }}" />
+                        <h3>{{ book.title }}</h3>
+                        <p>${{ "%.2f"|format(book.price) }}</p>
+                        <a href="{{ url_for('books.details', book_id=book.id) }}" class="btn-detail">
+                            Ver detalles
+                        </a>
+                    </article>
+
+                    {% else %}
+
+                    <p>No hay libros marcados como más vendidos.</p>
+
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Recomendados Section -->
+            <div class="books-section">
+                <h2 class="section-title">Recomendados:</h2>
+                <div class="books-grid">
+
+                    {% for book in recomendados %}
+                    {% set image_src = book.image %}
+                    {% if image_src and not image_src.startswith('http') %}
+                    {% set image_src = s3_config.BASE_URL ~ book.image %}
+                    {% endif %}
+
+                    <article class="book-card">
+                        <img src="{{ image_src }}" alt="{{ book.title }}" />
+                        <h3>{{ book.title }}</h3>
+                        <p>${{ "%.2f"|format(book.price) }}</p>
+                        <a href="{{ url_for('books.details', book_id=book.id) }}" class="btn-detail">
+                            Ver detalles
+                        </a>
+                    </article>
+
+                    {% else %}
+
                     <p>No hay libros recomendados.</p>
-                {% endfor %}
+
+                    {% endfor %}
+                </div>
             </div>
         </div>
-    </div>
 
         <!-- Right Sidebar -->
         <div class="sidebar-right">
@@ -120,7 +112,8 @@
                     <div class="author-card">
                         <div class="author-image">
                             <!-- TODO: Agregar imagen del autor -->
-                            <img src="https://yennypy-images.s3.us-east-2.amazonaws.com/vanesaolivares.jpeg" alt="Autor 3">
+                            <img src="https://yennypy-images.s3.us-east-2.amazonaws.com/vanesaolivares.jpeg"
+                                alt="Autor 3">
                         </div>
                         <div class="author-name">Vanesa Olivares</div>
                     </div>
@@ -141,4 +134,5 @@
     <!-- Include Footer -->
     {% include 'components/footer.html' %}
 </body>
+
 </html>
