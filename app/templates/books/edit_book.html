@@ -2,6 +2,8 @@
 
 
 {% block content %}
+<body class="book-form-body"> 
+
 <div class="book-form-container">
   <div class="book-form-card">
     <div class="book-form-header">
@@ -64,12 +66,12 @@
 
       <div class="image-preview-container">
         <span class="image-preview-label">Portada actual</span>
-        {% if book.image %}
-          <img src="{{ generate_presigned_url_for_key(book.image) }}" alt="Portada actual" class="current-image">
+        {% if current_image_url %} 
+          <img src="{{ current_image_url }}" alt="Portada actual" class="current-image">
         {% else %}
           <div class="no-image-placeholder">Sin imagen</div>
         {% endif %}
-      </div>
+    </div>
 
       <div class="form-group">
         {{ form.image.label(class="form-label") }}
@@ -84,4 +86,5 @@
     </form>
   </div>
 </div>
+</body>
 {% endblock %}
