@@ -10,18 +10,15 @@
 
 <body class="body-nav">
 
-    <!-- Mensajes Flash -->
-<div class="flashes-container max-w-6xl mx-auto p-4 pt-0">
+    <!-- Mensajes Flash - ahora flotantes sobre todo -->
+    <div class="flashes-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="flash-messages">
                     {% for category, message in messages %}
-                        
-                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                            
+                        <div class="alert alert-{{ category }}" role="alert">
                             {{ message }}
-                            
-                            <button type="button" class="btn-close" onclick="this.parentElement.style.display='none'">
+                            <button type="button" class="btn-close" onclick="closeAlert(this)">
                                 &times;
                             </button>
                         </div>
@@ -31,7 +28,7 @@
         {% endwith %}
     </div>
 
-    <header class="header-container">
+    <!-- Header - ahora sin espacio arriba -->
     <header class="header-container">
         <div class="top-bar">
             <div class="logo">
@@ -72,6 +69,9 @@
             <button class="nav-button">Precio</button>
         </nav>
     </header>
+
+    <!-- Contenido de la página -->
+    {% block content %}{% endblock %}
 
     <!-- Menú deslizable universal -->
     <div class="slide-menu" id="slideMenu">
@@ -154,6 +154,14 @@
             document.body.classList.toggle('menu-open');
         }
 
+        function closeAlert(button) {
+            const alert = button.parentElement;
+            alert.classList.add('fade-out');
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 300);
+        }
+
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 const slideMenu = document.getElementById('slideMenu');
@@ -161,6 +169,18 @@
                     toggleMenu();
                 }
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    const closeBtn = alert.querySelector('.btn-close');
+                    if (closeBtn && alert.style.display !== 'none') {
+                        closeAlert(closeBtn);
+                    }
+                }, 5000);
+            });
         });
     </script>
 </body>

@@ -17,180 +17,74 @@
 
     <!-- Main Container -->
     <div class="main-container">
-        <!-- Left Content -->
-        <div class="content-left">
-            <!-- Más Vendidos Section -->
-            <div class="books-section">
-                <h2 class="section-title">Más vendidos:</h2>
-                <div class="books-grid">
-                    <!-- Book 1 -->
+    <!-- Left Content (Libros) -->
+    <div class="content-left">
+        <!-- Más Vendidos Section -->
+        <div class="books-section">
+            <h2 class="section-title">Más vendidos:</h2>
+            <div class="books-grid">
+                
+                {% for book in mas_vendidos %}
+                    {% set image_src = book.image %}
+                    {% if image_src and not image_src.startswith('http') %}
+                        {% set image_src = s3_config.BASE_URL ~ book.image %}
+                    {% endif %}
+                    
                     <div class="book-card">
                         <div class="book-image">
-                            <!-- TODO: Agregar imagen del libro -->
-                            <img class="book-cover" src="https://yennypy-images.s3.us-east-2.amazonaws.com/amanecer_en_la_cosecha.jpg" alt="Libro 1">
+                            <a href="{{ url_for('main.book_detail', book_id=book.id) }}">
+                                <img class="book-cover" src="{{ image_src or url_for('static', filename='images/default-book.png') }}" alt="{{ book.title }}">
+                            </a>
                         </div>
                         <div class="book-info">
-                            <div class="book-name">Amanecer en la Cosecha</div>
-                            <div class="book-price">29.900</div>
+                            <div class="book-name">{{ book.title }}</div>
+                            <div class="book-price">${{ "{:.2f}".format(book.price) }}</div>
                             <div class="book-actions">
-                                <button class="buy-button">Comprar</button>
+                                <form method="POST" action="{{ url_for('main.cart_add_item', book_id=book.id) }}" class="inline-block">
+                                    <button type="submit" class="buy-button">Comprar</button>
+                                </form>
                                 <span class="star-icon">⭐</span>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Book 2 -->
-                    <div class="book-card">
-                        <div class="book-image">
-                            <!-- TODO: Agregar imagen del libro -->
-                            <img class="book-cover" src="https://yennypy-images.s3.us-east-2.amazonaws.com/el_buen_mal.jpg" alt="Libro 2">
-                        </div>
-                        <div class="book-info">
-                            <div class="book-name">El Buen Mal</div>
-                            <div class="book-price">25.000</div>
-                            <div class="book-actions">
-                                <button class="buy-button">Comprar</button>
-                                <span class="star-icon">⭐</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Book 3 -->
-                    <div class="book-card">
-                        <div class="book-image">
-                            <!-- TODO: Agregar imagen del libro -->
-                            <img class="book-cover" src="https://yennypy-images.s3.us-east-2.amazonaws.com/este_dolor_no_es_mio.jpg" alt="Libro 3">
-                        </div>
-                        <div class="book-info">
-                            <div class="book-name">Este Dolor No Es Mío</div>
-                            <div class="book-price">30.000</div>
-                            <div class="book-actions">
-                                <button class="buy-button">Comprar</button>
-                                <span class="star-icon">⭐</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Book 4 -->
-                    <div class="book-card">
-                        <div class="book-image">
-                            <!-- TODO: Agregar imagen del libro -->
-                            <img class="book-cover" src="https://yennypy-images.s3.us-east-2.amazonaws.com/la_casa_neville_3.jpg" alt="Libro 4">
-                        </div>
-                        <div class="book-info">
-                            <div class="book-name">La Casa Neville</div>
-                            <div class="book-price">35.000</div>
-                            <div class="book-actions">
-                                <button class="buy-button">Comprar</button>
-                                <span class="star-icon">⭐</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Book 5 -->
-                    <div class="book-card">
-                        <div class="book-image">
-                            <!-- TODO: Agregar imagen del libro -->
-                            <img class="book-cover" src="https://yennypy-images.s3.us-east-2.amazonaws.com/la_vegetariana.jpg" alt="Libro 5">
-                        </div>
-                        <div class="book-info">
-                            <div class="book-name">La Vegetariana</div>
-                            <div class="book-price">40.000</div>
-                            <div class="book-actions">
-                                <button class="buy-button">Comprar</button>
-                                <span class="star-icon">⭐</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recomendados Section -->
-            <div class="books-section">
-                <h2 class="section-title">Recomendados:</h2>
-                <div class="books-grid">
-                    <!-- Book 1 -->
-                    <div class="book-card">
-                        <div class="book-image">
-                            <!-- TODO: Agregar imagen del libro -->
-                            <img src="URL_LIBRO_REC_1" alt="Libro Recomendado 1">
-                        </div>
-                        <div class="book-info">
-                            <div class="book-name">Nombre</div>
-                            <div class="book-price">Precio</div>
-                            <div class="book-actions">
-                                <button class="buy-button">Comprar</button>
-                                <span class="star-icon">⭐</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Book 2 -->
-                    <div class="book-card">
-                        <div class="book-image">
-                            <!-- TODO: Agregar imagen del libro -->
-                            <img src="URL_LIBRO_REC_2" alt="Libro Recomendado 2">
-                        </div>
-                        <div class="book-info">
-                            <div class="book-name">Nombre</div>
-                            <div class="book-price">Precio</div>
-                            <div class="book-actions">
-                                <button class="buy-button">Comprar</button>
-                                <span class="star-icon">⭐</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Book 3 -->
-                    <div class="book-card">
-                        <div class="book-image">
-                            <!-- TODO: Agregar imagen del libro -->
-                            <img src="URL_LIBRO_REC_3" alt="Libro Recomendado 3">
-                        </div>
-                        <div class="book-info">
-                            <div class="book-name">Nombre</div>
-                            <div class="book-price">Precio</div>
-                            <div class="book-actions">
-                                <button class="buy-button">Comprar</button>
-                                <span class="star-icon">⭐</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Book 4 -->
-                    <div class="book-card">
-                        <div class="book-image">
-                            <!-- TODO: Agregar imagen del libro -->
-                            <img src="URL_LIBRO_REC_4" alt="Libro Recomendado 4">
-                        </div>
-                        <div class="book-info">
-                            <div class="book-name">Nombre</div>
-                            <div class="book-price">Precio</div>
-                            <div class="book-actions">
-                                <button class="buy-button">Comprar</button>
-                                <span class="star-icon">⭐</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Book 5 -->
-                    <div class="book-card">
-                        <div class="book-image">
-                            <!-- TODO: Agregar imagen del libro -->
-                            <img src="URL_LIBRO_REC_5" alt="Libro Recomendado 5">
-                        </div>
-                        <div class="book-info">
-                            <div class="book-name">Nombre</div>
-                            <div class="book-price">Precio</div>
-                            <div class="book-actions">
-                                <button class="buy-button">Comprar</button>
-                                <span class="star-icon">⭐</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% else %}
+                    <p>No hay libros marcados como más vendidos.</p>
+                {% endfor %}
             </div>
         </div>
+
+        <!-- Recomendados Section -->
+        <div class="books-section">
+            <h2 class="section-title">Recomendados:</h2>
+            <div class="books-grid">
+                
+                {% for book in recomendados %}
+                    {% set image_src = book.image %}
+                    {% if image_src and not image_src.startswith('http') %}
+                        {% set image_src = s3_config.BASE_URL ~ book.image %}
+                    {% endif %}
+                    
+                    <div class="book-card">
+                        <div class="book-image">
+                            <a href="{{ url_for('main.book_detail', book_id=book.id) }}">
+                                <img class="book-cover" src="{{ image_src or url_for('static', filename='images/default-book.png') }}" alt="{{ book.title }}">
+                            </a>
+                        </div>
+                        <div class="book-info">
+                            <div class="book-name">{{ book.title }}</div>
+                            <div class="book-price">${{ "{:.2f}".format(book.price) }}</div>
+                            <div class="book-actions">
+                                <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="buy-button view-button">Ver</a>
+                                <span class="star-icon">⭐</span>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>No hay libros recomendados.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
         <!-- Right Sidebar -->
         <div class="sidebar-right">
@@ -202,18 +96,18 @@
                     <div class="author-card">
                         <div class="author-image">
                             <!-- TODO: Agregar imagen del autor -->
-                            <img src="URL_AUTOR_1" alt="Autor 1">
+                            <img src="https://yennypy-images.s3.us-east-2.amazonaws.com/brianhe.jpeg" alt="Autor 1">
                         </div>
-                        <div class="author-name">Nombre de Autor</div>
+                        <div class="author-name">Brian He</div>
                     </div>
 
                     <!-- Author 2 -->
                     <div class="author-card">
                         <div class="author-image">
                             <!-- TODO: Agregar imagen del autor -->
-                            <img src="URL_AUTOR_2" alt="Autor 2">
+                            <img src="https://yennypy-images.s3.us-east-2.amazonaws.com/rafaelmacias.png" alt="Autor 2">
                         </div>
-                        <div class="author-name">Nombre de autor</div>
+                        <div class="author-name">Rafael Macias</div>
                     </div>
                 </div>
             </div>
@@ -226,18 +120,18 @@
                     <div class="author-card">
                         <div class="author-image">
                             <!-- TODO: Agregar imagen del autor -->
-                            <img src="URL_AUTOR_3" alt="Autor 3">
+                            <img src="https://yennypy-images.s3.us-east-2.amazonaws.com/vanesaolivares.jpeg" alt="Autor 3">
                         </div>
-                        <div class="author-name">Nombre de Autor</div>
+                        <div class="author-name">Vanesa Olivares</div>
                     </div>
 
                     <!-- Author 2 -->
                     <div class="author-card">
                         <div class="author-image">
                             <!-- TODO: Agregar imagen del autor -->
-                            <img src="URL_AUTOR_4" alt="Autor 4">
+                            <img src="https://yennypy-images.s3.us-east-2.amazonaws.com/f1.png" alt="Autor 4">
                         </div>
-                        <div class="author-name">Nombre de Autor</div>
+                        <div class="author-name">Elias Contrera</div>
                     </div>
                 </div>
             </div>
