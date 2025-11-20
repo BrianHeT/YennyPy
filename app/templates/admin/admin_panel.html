@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     {# Vinculando el CSS usando url_for de Flask #}
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body class="admin-body">
     <h1 class="admin-h1">Panel de Administración</h1>
 
@@ -21,16 +23,16 @@
     </aside>
 
     <main class="admin-content">
-        
+
         {# Mostrar mensajes flash (éxito o error) #}
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                </div>
-            {% endif %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
         {% endwith %}
 
         {# ========================================================================= #}
@@ -38,7 +40,7 @@
         {# ========================================================================= #}
         <section id="books-management" class="tab-content active">
             <h2>📚 Gestión de Libros</h2>
-            
+
             {# --- Formulario para Crear/Subir Libro --- #}
             <div class="card mb-4">
                 <h3>Subir Nuevo Libro</h3>
@@ -71,12 +73,19 @@
                         <td>{{ book.quantity }}</td>
                         <td>
                             {# RUTA UPDATE: /admin/books/edit/<id> #}
-                            <a href="{{ url_for('books.edit_book', book_id=book.id) }}" class="btn-sm btn-edit">Editar</a>
+                                <a href="{{ url_for('books.edit_book', book_id=book.id) }}"
+                                    class="btn-sm btn-edit">Editar</a>
 
-                            {# RUTA DELETE: /admin/books/delete/<id> (Método POST) #}
-                            <form method="POST" action="{{ url_for('books.delete_book', book_id=book.id) }}" style="display:inline;">
-                                <button type="submit" class="btn-sm btn-danger" onclick="return confirm('¿Seguro que deseas eliminar el libro {{ book.title }}?');">Eliminar</button>
-                            </form>
+                                {# RUTA DELETE: /admin/books/delete/<id> (Método POST) #}
+                                    <form method="POST" action="{{ url_for('books.delete_book', book_id=book.id) }}"
+                                        class="inline"
+                                        onsubmit="return confirm('¿Estás SEGURO de que quieres eliminar DEFINITIVAMENTE el libro: {{ book.title }}? Esta acción no se puede deshacer.')">
+
+                                        <button type="submit"
+                                            class="text-red-600 hover:text-red-900 transition duration-150">
+                                            Eliminar
+                                        </button>
+                                    </form>
                         </td>
                     </tr>
                     {% endfor %}
@@ -98,7 +107,7 @@
         {# ========================================================================= #}
         <section id="user-list" class="tab-content">
             <h2>👥 Lista de Usuarios Registrados ({{ users|length }} en total)</h2>
-            
+
             <table class="data-table">
                 <thead>
                     <tr>
@@ -116,19 +125,20 @@
                         <td>{{ user.id }}</td>
                         <td>{{ user.name }}</td>
                         <td>{{ user.email }}</td>
-                        
+
                         {# Lógica Jinja2 para determinar el rol (se basa en el campo is_admin) #}
                         <td>
                             {% if user.is_admin %}
-                                <span class="role-tag admin">ADMIN</span>
+                            <span class="role-tag admin">ADMIN</span>
                             {% else %}
-                                <span class="role-tag client">CLIENTE</span>
-                                {# Aquí podrías agregar más checks: {% elif user.is_author %} #}
+                            <span class="role-tag client">CLIENTE</span>
+                            {# Aquí podrías agregar más checks: {% elif user.is_author %} #}
                             {% endif %}
                         </td>
-                        
+
                         <td>
-                            <a href="{{ url_for('admin.edit_user_role', user_id=user.id) }}" class="btn-sm btn-edit">Editar Rol</a>
+                            <a href="{{ url_for('admin.edit_user_role', user_id=user.id) }}"
+                                class="btn-sm btn-edit">Editar Rol</a>
                             {# Asume una ruta para eliminar usuarios: url_for('admin.delete_user', user_id=user.id) #}
                         </td>
                     </tr>
@@ -142,23 +152,23 @@
     {# Añadiendo JavaScript para navegación de tabs #}
     <script>
         // JavaScript para el cambio de pestañas del sidebar
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const sidebarLinks = document.querySelectorAll('.sidebar-link[href^="#"]');
             const tabContents = document.querySelectorAll('.tab-content');
 
             sidebarLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
+                link.addEventListener('click', function (e) {
                     e.preventDefault();
-                    
+
                     // Remover clase active de todos los enlaces
                     sidebarLinks.forEach(l => l.classList.remove('active'));
-                    
+
                     // Agregar clase active al enlace clickeado
                     this.classList.add('active');
-                    
+
                     // Ocultar todos los contenidos de tabs
                     tabContents.forEach(tab => tab.classList.remove('active'));
-                    
+
                     // Mostrar el tab correspondiente
                     const targetId = this.getAttribute('href').substring(1);
                     const targetTab = document.getElementById(targetId);
@@ -170,4 +180,5 @@
         });
     </script>
 </body>
+
 </html>

@@ -152,7 +152,7 @@ def delete_book(book_id):
         database.session.delete(book)
         database.session.commit()
         flash("Libro eliminado.", "success")
-        return redirect(url_for("books.biblioteca"))
+        return redirect(url_for("books.list_books"))
 
     return render_template("books/delete_book.html", book=book)
 
