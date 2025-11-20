@@ -507,12 +507,11 @@ body-login-register {
             font-weight: 600;
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        .form-group-remember {
+            margin-bottom: 0px;
         }
 
-        .form-group label {
-            display: block;
+        .form-group-remember label {
             margin-bottom: 8px;
             font-size: 14px;
             color: #2c3e50;
@@ -1152,6 +1151,8 @@ body-index {
         justify-content: center;
     }
 }
+
+
 /* ------------------------ FIN SEARCH RESULTS ------------------------------------*/
 
 /* ============================================
