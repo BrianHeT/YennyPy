@@ -1311,6 +1311,8 @@ body-index {
 
 .alert {
     padding: var(--spacing-md);
+    padding-right: 3rem;
+    position: relative;
     margin-bottom: var(--spacing-sm);
     border-radius: var(--border-radius);
     border-left: 4px solid;
@@ -1327,6 +1329,23 @@ body-index {
         opacity: 1;
         transform: translateY(0);
     }
+}
+.btn-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: var(--spacing-md);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    opacity: 0.5;
+    transition: opacity 0.15s ease;
+}
+
+.btn-close:hover {
+    opacity: 1;
 }
 
 .alert-success {
