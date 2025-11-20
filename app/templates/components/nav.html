@@ -11,22 +11,27 @@
 <body class="body-nav">
 
     <!-- Mensajes Flash -->
-<div class="flashes-container max-w-6xl mx-auto mb-4">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
+<div class="flashes-container max-w-6xl mx-auto p-4 pt-0">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
                     {% for category, message in messages %}
-                        <!-- Nota: Debes adaptar estas clases CSS a Tailwind, no son de Bootstrap -->
-                        <div class="bg-{{ 'green' if category == 'success' else 'yellow' if category == 'warning' else 'red' }}-100 border border-{{ 'green' if category == 'success' else 'yellow' if category == 'warning' else 'red' }}-400 text-{{ 'green' if category == 'success' else 'yellow' if category == 'warning' else 'red' }}-700 px-4 py-3 rounded-lg relative mb-2" role="alert">
+                        
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            
                             {{ message }}
-                            <!-- Botón de Cierre (Simple JavaScript/HTML) -->
-                            <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3 text-lg font-bold" onclick="this.parentElement.style.display='none'">
+                            
+                            <button type="button" class="btn-close" onclick="this.parentElement.style.display='none'">
                                 &times;
                             </button>
                         </div>
                     {% endfor %}
-                {% endif %}
-            {% endwith %}
-        </div>
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <header class="header-container">
     <header class="header-container">
         <div class="top-bar">
             <div class="logo">
