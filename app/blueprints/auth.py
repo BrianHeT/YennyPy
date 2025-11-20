@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_user, logout_user, login_required, current_user
 from app.extensions import database, bcrypt
 from app.models import User
-from app.forms import RegistrationForm, LoginForm
+from app.forms import ProfileUpdateForm, RegistrationForm, LoginForm
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 from urllib.parse import urlencode, urlunparse
@@ -242,3 +242,26 @@ def logout():
 @login_required 
 def profile():
     return render_template('profile.html', title='Perfil', user=current_user)
+
+@bp_auth.route("/profile/edit", methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = ProfileUpdateForm(obj=current_user) 
+    
+    if form.validate_on_submit():
+        
+
+        current_user.name = form.name.data
+        current_user.email = form.email.data
+        
+        if form.new_password.data:
+            current_user.password_hash = bcrypt.generate_password_hash(form.new_password.data).decode('utf-8')
+            flash('Perfil y contraseña actualizados con éxito.', 'success')
+        else:
+            flash('Perfil actualizado con éxito.', 'success')
+
+        database.session.commit()
+        
+        return redirect(url_for('main.profile')) 
+        
+    return render_template('profile_edit.html', title='Editar Perfil', form=form)

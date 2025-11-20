@@ -1,43 +1,102 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Menú de Usuario</h1>
 
-<h2>Información personal</h2>
-<form method="POST">
-    <label>Nombre:</label><br>
-    <input type="text" name="nombre" value="{{ usuario.nombre }}"><br><br>
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-    <label>Nueva contraseña:</label><br>
-    <input type="password" name="password"><br><br>
+<div class="profile-container">
+    <div class="profile-card">
+        
+        <!-- Encabezado de la Tarjeta -->
+        <div class="profile-card-header">
+            <h3>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                </svg>
+                Mi Perfil
+            </h3>
+        </div>
+        
+        <!-- Cuerpo de la Tarjeta -->
+        <div class="profile-card-body">
+            
+            <!-- Mensajes Flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
-    <button type="submit">Actualizar</button>
-</form>
+            <div class="profile-layout">
+                <!-- Columna de Avatar/Rol -->
+                <div class="profile-avatar-section">
+                    <div class="profile-avatar">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.93 0 3.5 1.57 3.5 3.5S13.93 12 12 12s-3.5-1.57-3.5-3.5S10.07 5 12 5zm0 14.2c-2.73 0-5.11-1.22-6.75-3.13 1.9-1.54 4.54-2.48 7.75-2.48s5.85.94 7.75 2.48c-1.64 1.91-4.02 3.13-6.75 3.13z"/>
+                        </svg>
+                    </div>
+                    <h4 class="profile-username">{{ current_user.name }}</h4>
+                    <p class="profile-role">
+                        {{ 'Administrador' if current_user.is_admin else 'Cliente' }}
+                    </p>
+                </div>
 
-<h2>Rol</h2>
-<p>{{ 'Autor' if usuario.es_autor else 'Lector' }}</p>
+                <!-- Columna de Información Personal -->
+                <div class="profile-info-section">
+                    <h5>Información Personal</h5>
+                    
+                    <!-- Ítem: Nombre -->
+                    <div class="info-item">
+                        <label>Nombre:</label>
+                        <p>{{ current_user.name }}</p>
+                    </div>
 
-<h2>Compras realizadas</h2>
-{% if compras %}
-<table>
-    <tr><th>Título</th><th>Precio</th></tr>
-    {% for item in compras %}
-    <tr>
-        <td>{{ item.libro.titulo }}</td>
-        <td>${{ item.libro.precio }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>No has realizado compras aún.</p>
-{% endif %}
+                    <!-- Ítem: Email -->
+                    <div class="info-item">
+                        <label>Email:</label>
+                        <p>{{ current_user.email }}</p>
+                    </div>
+                </div>
+            </div>
 
-<a href="{{ url_for('usuarios.logout') }}">Cerrar sesión</a>
+            <div class="profile-divider"></div>
 
-</body>
-</html>
+            <!-- Botones de Acción -->
+            <div class="profile-actions">
+                <a href="{{ url_for('main.index') }}" class="btn-profile secondary">
+                    <i class="fas fa-arrow-left"></i> Volver a la Tienda
+                </a>
+                <a href="{{url_for('auth.edit_profile')}}" class="btn-profile primary">
+                    <i class="fas fa-edit"></i> Editar Perfil
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas del usuario (Carrito/Historial) -->
+    <div class="profile-stats-grid">
+        
+        <!-- Carrito -->
+        <div class="stat-card cart">
+            <i class="fas fa-shopping-cart"></i>
+            <h5>Carrito</h5>
+            <p>Revisar ítems pendientes</p>
+            <a href="{{ url_for('carrito.cart') }}" class="stat-link">
+                Ver Carrito
+            </a>
+        </div>
+        
+        <!-- Historial -->
+        <div class="stat-card history">
+            <i class="fas fa-history"></i>
+            <h5>Historial</h5>
+            <p>Próximamente</p>
+            <button class="stat-link" disabled>
+                Ver Historial
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock content %}
