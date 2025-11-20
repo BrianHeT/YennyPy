@@ -4,37 +4,59 @@
     box-sizing: border-box;
 }
 /* ------------------ NAVBAR -------------------------------------*/
-
-        .body-nav {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+.body-nav {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .header-container {
-    background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 50; /* Menor que las alertas flash (9999) */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .top-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1.5rem;
-    gap: 1rem;
-    flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #1f2937;
-    white-space: nowrap;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+  white-space: nowrap;
 }
+
+/* Resto de estilos del navbar... */
+.nav-bar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 1.5rem 1rem;
+  overflow-x: auto;
+}
+
+.nav-button {
+  padding: 0.5rem 1rem;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.nav-button:hover {
+  background: #e5e7eb;
+}
+
 
 /* Buscador funcional mejorado */
 .search-container {
@@ -1305,74 +1327,101 @@ body-index {
 /* ============================================
    MENSAJES FLASH (ALERTAS)
    ============================================ */
+.flashes-container {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999; /* Muy alto para estar sobre todo */
+  width: 90%;
+  max-width: 600px;
+  pointer-events: none; /* Permite clicks debajo del container vacío */
+}
+
 .flash-messages {
-    margin-bottom: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .alert {
-    padding: var(--spacing-md);
-    padding-right: 3rem;
-    position: relative;
-    margin-bottom: var(--spacing-sm);
-    border-radius: var(--border-radius);
-    border-left: 4px solid;
-    font-weight: 500;
-    animation: slideInDown var(--transition-normal);
+  padding: 1rem;
+  padding-right: 3rem;
+  position: relative;
+  border-radius: 8px;
+  border-left: 4px solid;
+  font-weight: 500;
+  animation: slideInDown 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  pointer-events: auto; /* Permite clicks en las alertas */
 }
 
 @keyframes slideInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 .btn-close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: var(--spacing-md);
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    line-height: 1;
-    opacity: 0.5;
-    transition: opacity 0.15s ease;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
+  color: inherit;
 }
 
 .btn-close:hover {
-    opacity: 1;
+  opacity: 1;
 }
 
 .alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    border-left-color: var(--success-color);
+  background-color: #d4edda;
+  color: #155724;
+  border-left-color: #28a745;
 }
 
 .alert-danger,
 .alert-error {
-    background-color: #f8d7da;
-    color: #721c24;
-    border-left-color: var(--danger-color);
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left-color: #dc3545;
 }
 
 .alert-warning {
-    background-color: #fff3cd;
-    color: #856404;
-    border-left-color: var(--warning-color);
+  background-color: #fff3cd;
+  color: #856404;
+  border-left-color: #ffc107;
 }
 
 .alert-info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border-left-color: var(--info-color);
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-left-color: #17a2b8;
 }
 
+/* Animación de salida al cerrar */
+.alert.fade-out {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
 /* ============================================
    TARJETAS (CARDS)
    ============================================ */

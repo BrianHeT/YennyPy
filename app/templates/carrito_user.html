@@ -10,11 +10,12 @@
     <h2 class="cart-title">🛒 Mi Carrito de Compras</h2>
 
     {% if cart_items|length == 0 %}
-        <div class="empty-cart">
-            <p>No tienes libros en el carrito.</p>
-            <a href="{{ url_for('books.biblioteca') }}">Ver Libros</a>
-        </div>
-    {% else %}
+    <div class="cart-empty">
+        <h2>Tu carrito está vacío</h2>
+        <p>¿Querés ver nuestros libros?</p>
+        <a href="{{ url_for('books.list_books') }}" class="btn">Explorar Libros</a>
+    </div>
+{% else %}
         <div class="table-responsive">
             <table>
                 <thead>

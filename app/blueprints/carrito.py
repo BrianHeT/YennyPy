@@ -15,7 +15,7 @@ def cart():
         joinedload(CartItem.book)
     ).filter(CartItem.user_id == current_user.id).all()
     
-    total_price = sum(item.cantidad * item.book.price for item in cart_items)
+    total_price = sum(item.cantidad * item.book.price for item in cart_items) if cart_items else 0
     
     s3_config = {
         'BASE_URL': f"https://{current_app.config.get('AWS_S3_BUCKET')}.s3.{current_app.config.get('AWS_REGION')}.amazonaws.com/"
